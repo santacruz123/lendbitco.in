@@ -9,7 +9,8 @@
     "angular-ui-router": "0.2.x",
     "foundation": "5.2.x",
     "ripple-bonds": "~0.1.1",
-    "angular-percentage-filter": "~1.0.1"
+    "angular-percentage-filter": "~1.0.1",
+    "ripple-lib": "~0.7.37"
   },
   "devDependencies": {
     "angular-mocks": "1.2.x"
