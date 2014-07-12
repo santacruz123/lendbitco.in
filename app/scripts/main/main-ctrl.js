@@ -9,6 +9,9 @@ angular.module('gulpangular')
     $scope.predicate = 'b';
     $scope.reverse = false;
 
+    Bonds.addBond('rQpCfAsbZFRwH53aoVqzKFcXuq6wnukQCL', 'UFF');
+    Bonds.addBond('rLxW7EemTrcmwFVZJsYtfnnP4rXAb92o4v', 'UFF');
+
     $scope.filter = {
       //i: 'x124'
     };

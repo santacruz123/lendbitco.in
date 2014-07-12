@@ -1,3 +1,3 @@
-<div ng-repeat="bond in bonds | filter:filter | orderBy:predicate:reverse">
+<div ng-repeat="bond in bonds track by bond.i + bond.s | filter:filter | orderBy:predicate:reverse">
   {{bond.i}} - {{bond.s}} - {{rb.YTMNowSymbol(bond.s,bond.b)|percentage}}
 </div>
