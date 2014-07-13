@@ -23,7 +23,9 @@ angular.module('gulpangular')
       } else {
         index = Bonds.bonds.push({
           i: issuer,
-          s: symbol
+          s: symbol,
+          b: 0,
+          a: 0
         });
 
         index--;

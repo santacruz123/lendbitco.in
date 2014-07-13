@@ -4,10 +4,6 @@ angular.module('gulpangular')
   .service('Ripple', function ($window, FED, $rootScope) {
 
     var ripple = $window.window.ripple;
-
-    // TODO change ripple-bonds to lowercase in lib
-    var RippleBonds = $window.window.RippleBonds;
-
     var Remote = ripple.Remote;
 
     var remote = new Remote({
@@ -69,7 +65,8 @@ angular.module('gulpangular')
       });
 
       bids.on('transaction', function () {
-        bond.b = bids.offersSync().length ? getPriceFromOffer(bids.offersSync().shift()) : 0;
+        var offers = bids.offersSync();
+        bond.b = offers.length ? getPriceFromOffer(offers.shift()) : 0;
         $rootScope.$apply();
         console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Bid:', bond.b);
       });
@@ -94,7 +91,8 @@ angular.module('gulpangular')
       });
 
       asks.on('transaction', function () {
-        bond.a = asks.offersSync().length ? getPriceFromOffer(asks.offersSync().shift()) : 0;
+        var offers = asks.offersSync();
+        bond.a = offers.length ? getPriceFromOffer(offers.shift()) : 0;
         $rootScope.$apply();
         console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Ask:', bond.a);
       });
