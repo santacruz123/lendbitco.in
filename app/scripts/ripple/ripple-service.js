@@ -58,17 +58,25 @@ angular.module('gulpangular')
 
       var bids = remote.book(optBids);
 
-      bids.offers(function (data) {
-        bond.b = data.length ? getPriceFromOffer(data.shift()) : 0;
-        $rootScope.$apply();
-        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Bid:', bond.b);
-      });
+      function processOffers(offers) {
+
+        if (typeof offers[0] === 'undefined') {
+          return;
+        }
+
+        var newPrice = getPriceFromOffer(offers[0]);
+
+        if (newPrice !== bond.b) {
+          bond.b = newPrice;
+          $rootScope.$apply();
+        }
+      }
+
+      bids.offers(processOffers);
 
       bids.on('transaction', function () {
-        var offers = bids.offersSync();
-        bond.b = offers.length ? getPriceFromOffer(offers.shift()) : 0;
-        $rootScope.$apply();
-        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Bid:', bond.b);
+        var tpmBidsBook = remote.book(optBids);
+        tpmBidsBook.offers(processOffers);
       });
 
       // asks
