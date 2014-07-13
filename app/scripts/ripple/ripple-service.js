@@ -24,27 +24,38 @@ angular.module('gulpangular')
       /* jshint ignore:end */
     });
 
-    function getPriceFromOffer(offer) {
-
-      // If somebody selling bond for XRP
-      //
-      // "TakerGets": "6250428327",
-      // "TakerPays": {
-      //   "currency": "USD",
-      //   "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-      //   "value": "26.741141747517"
-      // }
-
-      if (typeof offer.TakerGets.issuer === 'undefined') {
-        return offer.TakerGets / offer.TakerPays.value / 1000000;
-      } else {
-        return offer.TakerGets.value / offer.TakerPays.value;
-      }
-    }
-
     remote.connect();
 
     function watchBondPrices(issuer, symbol, bond) {
+
+      // Test what when modifying bond
+
+      function getPriceFromOffer(offer, type) {
+
+        // If somebody selling bond for XRP
+        //
+        // "TakerGets": "6250428327",
+        // "TakerPays": {
+        //   "currency": "USD",
+        //   "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+        //   "value": "26.741141747517"
+        // }
+
+        if (type === 'bid') {
+          if (typeof offer.TakerGets.issuer === 'undefined') {
+            return (offer.TakerGets / offer.TakerPays.value / 1000000).toFixed(3);
+          } else {
+            return (offer.TakerGets.value / offer.TakerPays.value).toFixed(3);
+          }
+        } else {
+          if (typeof offer.TakerPays.issuer === 'undefined') {
+            return (offer.TakerPays / offer.TakerGets.value / 1000000).toFixed(3);
+          } else {
+            return (offer.TakerPays.value / offer.TakerGets.value).toFixed(3);
+          }
+        }
+
+      }
 
       // bids
       var optBids = {
@@ -58,25 +69,24 @@ angular.module('gulpangular')
 
       var bids = remote.book(optBids);
 
-      function processOffers(offers) {
-
-        if (typeof offers[0] === 'undefined') {
-          return;
-        }
-
-        var newPrice = getPriceFromOffer(offers[0]);
+      bids.offers(function (offers) {
+        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
 
         if (newPrice !== bond.b) {
           bond.b = newPrice;
           $rootScope.$apply();
         }
-      }
-
-      bids.offers(processOffers);
+      });
 
       bids.on('transaction', function () {
-        var tpmBidsBook = remote.book(optBids);
-        tpmBidsBook.offers(processOffers);
+        var offers = bids.offersSync();
+
+        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
+
+        if (newPrice !== bond.b) {
+          bond.b = newPrice;
+          $rootScope.$apply();
+        }
       });
 
       // asks
@@ -92,17 +102,27 @@ angular.module('gulpangular')
 
       var asks = remote.book(optAsks);
 
-      asks.offers(function (data) {
-        bond.a = data.length ? getPriceFromOffer(data.shift()) : 0;
-        $rootScope.$apply();
-        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Ask:', bond.a);
+      asks.offers(function (offers) {
+
+        console.log('Asks', offers);
+
+        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
+        if (newPrice !== bond.a) {
+          bond.a = newPrice;
+          $rootScope.$apply();
+        }
       });
 
       asks.on('transaction', function () {
         var offers = asks.offersSync();
-        bond.a = offers.length ? getPriceFromOffer(offers.shift()) : 0;
-        $rootScope.$apply();
-        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Ask:', bond.a);
+        console.log('Asks transaction', offers);
+
+        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
+
+        if (newPrice !== bond.a) {
+          bond.a = newPrice;
+          $rootScope.$apply();
+        }
       });
     }
 
