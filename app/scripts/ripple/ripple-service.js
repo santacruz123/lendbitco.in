@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Ripple', function ($window, FED) {
+  .service('Ripple', function ($window, FED, $rootScope) {
 
     var ripple = $window.window.ripple;
 
@@ -46,35 +46,12 @@ angular.module('gulpangular')
       }
     }
 
+    remote.connect();
+
     function watchBondPrices(issuer, symbol, bond) {
 
       // bids
       var optBids = {
-        /* jshint ignore:start */
-        issuer_gets: issuer,
-        currency_gets: symbol,
-        issuer_pays: FED,
-        currency_pays: RippleBonds.currencyCodes[symbol[0]]
-        /* jshint ignore:end */
-      };
-
-      console.log('bids', optBids);
-
-      var bids = remote.book(optBids);
-
-      bids.offers(function (data) {
-        bond.b = getPriceFromOffer(data.shift());
-        console.log('Set bid price - ' + bond.b);
-      });
-
-      bids.on('transaction', function () {
-        bond.b = getPriceFromOffer(bids.offersSync().shift());
-        console.log('Set bid price after new transaction - ' + bond.b);
-      });
-
-      // asks
-
-      var optAsks = {
         /* jshint ignore:start */
         issuer_gets: FED,
         currency_gets: RippleBonds.currencyCodes[symbol[0]],
@@ -83,18 +60,43 @@ angular.module('gulpangular')
         /* jshint ignore:end */
       };
 
-      console.log('asks', optAsks);
+      var bids = remote.book(optBids);
+
+      bids.offers(function (data) {
+        bond.b = data.length ? getPriceFromOffer(data.shift()) : 0;
+        $rootScope.$apply();
+        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Bid:', bond.b);
+      });
+
+      bids.on('transaction', function () {
+        bond.b = bids.offersSync().length ? getPriceFromOffer(bids.offersSync().shift()) : 0;
+        $rootScope.$apply();
+        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Bid:', bond.b);
+      });
+
+      // asks
+
+      var optAsks = {
+        /* jshint ignore:start */
+        issuer_gets: issuer,
+        currency_gets: symbol,
+        issuer_pays: FED,
+        currency_pays: RippleBonds.currencyCodes[symbol[0]]
+        /* jshint ignore:end */
+      };
 
       var asks = remote.book(optAsks);
 
       asks.offers(function (data) {
-        bond.a = getPriceFromOffer(data.shift());
-        console.log('Set ask price - ' + bond.a);
+        bond.a = data.length ? getPriceFromOffer(data.shift()) : 0;
+        $rootScope.$apply();
+        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Ask:', bond.a);
       });
 
       asks.on('transaction', function () {
-        bond.a = getPriceFromOffer(asks.offersSync().shift());
-        console.log('Set ask price after new transaction - ' + bond.a);
+        bond.a = asks.offersSync().length ? getPriceFromOffer(asks.offersSync().shift()) : 0;
+        $rootScope.$apply();
+        console.log('Issuer:', bond.i, ' Symbol:', bond.s, 'Ask:', bond.a);
       });
     }
 
