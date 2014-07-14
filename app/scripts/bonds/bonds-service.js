@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Bonds', function (Ripple, $window) {
+  .service('Bonds', function (Ripple, $window, $rootScope) {
 
     var RippleBonds = $window.window.RippleBonds;
 
@@ -34,7 +34,20 @@ angular.module('gulpangular')
 
       Bonds.bondIndex[issuer][symbol] = index;
 
-      Ripple.watchBondPrices(issuer, symbol, Bonds.bonds[index]);
+      Ripple.watchBondPrices(issuer, symbol, function (bid, ask) {
+        if (bid !== null) {
+          if (bid !== Bonds.bonds[index].b) {
+            Bonds.bonds[index].b = bid;
+            $rootScope.$apply();
+          }
+        }
+        if (ask !== null) {
+          if (ask !== Bonds.bonds[index].a) {
+            Bonds.bonds[index].a = ask;
+            $rootScope.$apply();
+          }
+        }
+      });
 
       return index;
     };

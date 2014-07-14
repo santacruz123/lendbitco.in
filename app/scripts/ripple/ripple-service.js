@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Ripple', function ($window, FED, $rootScope) {
+  .service('Ripple', function ($window, FED) {
 
     var ripple = $window.window.ripple;
     var Remote = ripple.Remote;
@@ -26,104 +26,99 @@ angular.module('gulpangular')
 
     remote.connect();
 
-    function watchBondPrices(issuer, symbol, bond) {
-
-      // Test what when modifying bond
-
-      function getPriceFromOffer(offer, type) {
-
-        // If somebody selling bond for XRP
-        //
-        // "TakerGets": "6250428327",
-        // "TakerPays": {
-        //   "currency": "USD",
-        //   "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-        //   "value": "26.741141747517"
-        // }
-
-        if (type === 'bid') {
-          if (typeof offer.TakerGets.issuer === 'undefined') {
-            return (offer.TakerGets / offer.TakerPays.value / 1000000).toFixed(3);
-          } else {
-            return (offer.TakerGets.value / offer.TakerPays.value).toFixed(3);
-          }
+    function getPriceFromOffer(offer, type) {
+      if (type === 'bid') {
+        if (typeof offer.TakerGets.issuer === 'undefined') {
+          return (offer.TakerGets / offer.TakerPays.value / 1000000).toFixed(3);
         } else {
-          if (typeof offer.TakerPays.issuer === 'undefined') {
-            return (offer.TakerPays / offer.TakerGets.value / 1000000).toFixed(3);
-          } else {
-            return (offer.TakerPays.value / offer.TakerGets.value).toFixed(3);
-          }
+          return (offer.TakerGets.value / offer.TakerPays.value).toFixed(3);
         }
-
+      } else {
+        if (typeof offer.TakerPays.issuer === 'undefined') {
+          return (offer.TakerPays / offer.TakerGets.value / 1000000).toFixed(3);
+        } else {
+          return (offer.TakerPays.value / offer.TakerGets.value).toFixed(3);
+        }
       }
+    }
 
-      // bids
-      var optBids = {
-        /* jshint ignore:start */
-        issuer_gets: FED,
-        currency_gets: RippleBonds.currencyCodes[symbol[0]],
-        issuer_pays: issuer,
-        currency_pays: symbol
-        /* jshint ignore:end */
+    function watchBondPrices(issuer, symbol, cb) {
+
+      var bondOpt = {
+        currency: symbol,
+        issuer: issuer
       };
 
-      var bids = remote.book(optBids);
+      var currencyOpt = {
+        currency: RippleBonds.currencyCodes[symbol[0]],
+        issuer: FED
+      };
 
-      bids.offers(function (offers) {
-        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
+      // Bids
 
-        if (newPrice !== bond.b) {
-          bond.b = newPrice;
-          $rootScope.$apply();
-        }
+      remote.requestBookOffers({
+        gets: currencyOpt,
+        pays: bondOpt
+      }, function (err, data) {
+        var newPrice = typeof data.offers[0] !== 'undefined' ?
+          getPriceFromOffer(data.offers[0], 'bid') : 0;
+
+        cb(newPrice, null);
       });
 
-      bids.on('transaction', function () {
-        var offers = bids.offersSync();
 
-        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
+      // Asks
 
-        if (newPrice !== bond.b) {
-          bond.b = newPrice;
-          $rootScope.$apply();
-        }
+      remote.requestBookOffers({
+        gets: bondOpt,
+        pays: currencyOpt
+      }, function (err, data) {
+        var newPrice = typeof data.offers[0] !== 'undefined' ?
+          getPriceFromOffer(data.offers[0], 'ask') : 0;
+
+        cb(null, newPrice);
       });
 
+
+      // var bids = remote.book(optBids);
+
+      // bids.offers(function (offers) {
+      //   var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
+      //   cb(newPrice);
+      // });
+
+      // bids.on('transaction', function () {
+      //   var tmpBids = remote.book(optBids);
+      //   tmpBids.offers(function (offers) {
+      //     console.log(offers);
+      //     var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'bid') : 0;
+      //     cb(newPrice);
+      //   });
+      // });
       // asks
 
-      var optAsks = {
-        /* jshint ignore:start */
-        issuer_gets: issuer,
-        currency_gets: symbol,
-        issuer_pays: FED,
-        currency_pays: RippleBonds.currencyCodes[symbol[0]]
-        /* jshint ignore:end */
-      };
+      //   var optAsks = {
+      //     /* jshint ignore:start */
+      //     issuer_gets: issuer,
+      //     currency_gets: symbol,
+      //     issuer_pays: FED,
+      //     currency_pays: RippleBonds.currencyCodes[symbol[0]]
+      //     /* jshint ignore:end */
+      //   };
 
-      var asks = remote.book(optAsks);
+      //   var asks = remote.book(optAsks);
 
-      asks.offers(function (offers) {
+      //   // asks.offers(function (offers) {
+      //   //   var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
+      //   //   cb(null, newPrice);
+      //   // });
 
-        console.log('Asks', offers);
-
-        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
-        if (newPrice !== bond.a) {
-          bond.a = newPrice;
-          $rootScope.$apply();
-        }
-      });
-
-      asks.on('transaction', function () {
-        var offers = asks.offersSync();
-        console.log('Asks transaction', offers);
-
-        var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
-
-        if (newPrice !== bond.a) {
-          bond.a = newPrice;
-          $rootScope.$apply();
-        }
-      });
+      //   asks.on('transaction', function () {
+      //     var offers = asks.offersSync();
+      //     console.log(offers);
+      //     var newPrice = typeof offers[0] !== 'undefined' ? getPriceFromOffer(offers[0], 'ask') : 0;
+      //     cb(null, newPrice);
+      //   });
     }
 
     return {
