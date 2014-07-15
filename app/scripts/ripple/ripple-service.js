@@ -4,7 +4,7 @@ angular.module('gulpangular')
   .service('Ripple', function ($window, FED) {
 
     var ripple = $window.window.ripple;
-    var RippleBonds = $window.window.RippleBonds;
+    var rippleBonds = $window.window.rippleBonds;
     var Remote = ripple.Remote;
 
     var remote = new Remote({
@@ -51,7 +51,7 @@ angular.module('gulpangular')
       };
 
       var currencyOpt = {
-        currency: RippleBonds.currencyCodes[symbol[0]],
+        currency: rippleBonds.currencyCodes[symbol[0]],
         issuer: FED
       };
 
@@ -106,6 +106,15 @@ angular.module('gulpangular')
     }
 
     return {
-      watchBondPrices: watchBondPrices
+      watchBondPrices: watchBondPrices,
+      setSecret: function (acc, secret) {
+        remote.set_secret(acc, secret); // jshint ignore:line
+      },
+      transaction: function () {
+        return remote.transaction();
+      },
+      remote: function () {
+        return remote;
+      }
     };
   });

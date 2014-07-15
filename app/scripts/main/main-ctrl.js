@@ -3,7 +3,7 @@
 angular.module('gulpangular')
   .controller('MainCtrl', function ($scope, $filter, $window, Bonds) {
 
-    $scope.rb = $window.window.RippleBonds;
+    $scope.rb = $window.window.rippleBonds;
     $scope.bonds = Bonds.bonds;
 
     $scope.predicate = 'b';

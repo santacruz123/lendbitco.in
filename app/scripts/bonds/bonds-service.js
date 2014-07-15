@@ -3,7 +3,7 @@
 angular.module('gulpangular')
   .service('Bonds', function (Ripple, $window, $rootScope) {
 
-    var RippleBonds = $window.window.RippleBonds;
+    var rippleBonds = $window.window.rippleBonds;
 
     function Bonds() {}
 
@@ -24,7 +24,7 @@ angular.module('gulpangular')
         index = Bonds.bonds.push({
           i: issuer,
           s: symbol,
-          e: RippleBonds.getExpDate(symbol),
+          e: rippleBonds.getExpDate(symbol),
           b: 0,
           a: 0
         });
