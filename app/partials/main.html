@@ -1,4 +1,12 @@
 <table>
+    <tr>
+      <td ng-repeat="(currency, obj) in balances">
+        <strong>{{currency}} : {{obj.balance}}</strong>
+      </td>
+    </tr>
+</table>
+
+<table>
   <thead>
     <tr>
       <th>Issuer</th>

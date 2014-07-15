@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('gulpangular')
-  .controller('MainCtrl', function ($scope, $filter, $window, Bonds) {
+  .controller('MainCtrl', function ($scope, $filter, $window, Bonds, Account) {
 
     $scope.rb = $window.window.rippleBonds;
     $scope.bonds = Bonds.bonds;
+
+    $scope.balances = Account.updateBalances();
 
     $scope.predicate = 'b';
     $scope.reverse = false;
