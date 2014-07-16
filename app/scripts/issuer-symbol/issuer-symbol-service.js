@@ -27,14 +27,7 @@ angular.module('gulpangular')
 
       // Adding symbol
 
-      var isBond = false;
-
-      try {
-        rippleBonds.checkSymbol(symbol);
-        isBond = true;
-      } catch (e) {
-
-      }
+      var isBond = rippleBonds.isValidSymbol(symbol);
 
       var arrObj = {
         i: issuer,
