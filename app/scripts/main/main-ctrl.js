@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .controller('MainCtrl', function ($scope, $filter, $window, IssuerSymbol, Ripple, $rootScope) {
+  .controller('MainCtrl', function ($scope, $filter, $window, IssuerSymbol, Ripple, Orders, $rootScope) {
 
     $scope.rb = $window.window.rippleBonds;
 
@@ -9,6 +9,15 @@ angular.module('gulpangular')
       $scope.balances = IssuerSymbol.getBalances();
       $scope.bonds = IssuerSymbol.getBonds();
       $scope.positions = IssuerSymbol.getPositions();
+
+      $rootScope.$apply();
+    });
+
+    Orders.updateOrders(function () {
+      $scope.orders = Orders.getOrders({
+        s: 'UFF'
+      });
+
       $rootScope.$apply();
     });
 

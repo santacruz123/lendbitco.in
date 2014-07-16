@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Ripple', function ($window, FED, Account) {
+  .service('Ripple', function ($window, FED, Account, _) {
 
     var ripple = $window.window.ripple;
     var rippleBonds = $window.window.rippleBonds;
@@ -136,6 +136,60 @@ angular.module('gulpangular')
         }
 
         cb(null);
+      });
+    };
+
+    this.updateOrders = function (cb) {
+
+      remote.requestAccountOffers(Account.acc, function (err, data) {
+
+        if (err) {
+          return cb(err);
+        }
+
+        function isRippleBondsOffer(offer) { // jshint ignore:line
+
+          // Detecting if rippleBonds symbols/currencies are there
+
+          /* jshint ignore:start */
+
+          var isExchangeCurrency =
+            (_.contains(rippleBonds.currencies, offer.taker_gets.currency) &&
+              offer.taker_gets.issuer === FED) ||
+            (_.contains(rippleBonds.currencies, offer.taker_pays.currency) &&
+              offer.taker_pays.issuer === FED);
+
+          var isBond =
+            (rippleBonds.isValidSymbol(offer.taker_gets.currency) &&
+              offer.taker_gets.issuer !== FED) ||
+            (rippleBonds.isValidSymbol(offer.taker_pays.currency) &&
+              offer.taker_pays.issuer !== FED);
+
+          /* jshint ignore:end */
+
+          return isExchangeCurrency && isBond; // jshint ignore:line
+        }
+
+        var orders = _(data.offers)
+          .filter(isRippleBondsOffer)
+          .map(function (offer) {
+            var order = {};
+
+            var g = offer.taker_gets; // jshint ignore:line
+            var p = offer.taker_pays; // jshint ignore:line
+
+            // true = buy, false = sell
+
+            order.t = _.contains(rippleBonds.currencies, g.currency);
+            order.i = order.buy ? p.issuer : g.issuer;
+            order.s = g.issuer !== FED ? g.currency : p.currency;
+            order.p = order.buy ? +p.value / +g.value : +g.value / +p.value;
+            order.v = order.buy ? +g.value : +p.value;
+
+            return order;
+          }).value();
+
+        cb(null, orders);
       });
     };
 
