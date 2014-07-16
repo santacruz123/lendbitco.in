@@ -1,5 +1,8 @@
 'use strict';
 
+//TODO: REFACTOR EVERYTHING IN LODASH
+//TODO: REFACTOR IssuerSymbol with CB (call it Platform-service)
+
 angular.module('gulpangular', ['ngCookies', 'ui.router', 'percentage'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
