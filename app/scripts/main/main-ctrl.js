@@ -1,28 +1,26 @@
 'use strict';
 
 angular.module('gulpangular')
-  .controller('MainCtrl', function ($scope, $filter, $window, IssuerSymbol, Ripple, Orders, $rootScope) {
+  .controller('MainCtrl', function ($scope, $filter, RB, Account, Platform, Orders, $rootScope) {
 
-    $scope.rb = $window.window.rippleBonds;
-
-    Ripple.updateBalances.call(IssuerSymbol, function () {
-      $scope.balances = IssuerSymbol.getBalances();
-      $scope.bonds = IssuerSymbol.getBonds();
-      $scope.positions = IssuerSymbol.getPositions();
-
-      $rootScope.$apply();
-    });
-
-    Orders.updateOrders(function () {
-      $scope.orders = Orders.getOrders({
-        s: 'UFF'
-      });
+    function reloadCb() {
+      $scope.balances = Platform.getBalances();
+      $scope.bonds = Platform.getBonds();
+      $scope.positions = Platform.getPositions();
+      $scope.orders = Orders.getOrders();
 
       $rootScope.$apply();
-    });
+    }
 
-    $scope.predicate = 'b';
-    $scope.reverse = false;
-    $scope.filter = {};
+    Platform.setReloadCb(reloadCb);
+
+    $scope.rb = RB;
+
+    Platform.updateBalances();
+    Orders.updateOrders(reloadCb);
+
+    // $scope.predicate = 'b';
+    // $scope.reverse = false;
+    // $scope.filter = {};
 
   });

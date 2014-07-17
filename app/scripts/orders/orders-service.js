@@ -12,7 +12,10 @@ angular.module('gulpangular')
           return cb(err);
         }
         self.orders = orders;
-        cb(null);
+
+        if (cb) {
+          cb(null);
+        }
       });
     };
 

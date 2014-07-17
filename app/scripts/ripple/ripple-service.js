@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Ripple', function ($window, FED, Account, _) {
+  .service('Ripple', function ($window, FED, Account, _, RB) {
 
     var ripple = $window.window.ripple;
     var rippleBonds = $window.window.rippleBonds;
@@ -27,9 +27,7 @@ angular.module('gulpangular')
 
     remote.connect();
 
-    this.watchBidAsk = function (issuer, symbol) {
-
-      var self = this;
+    this.watchBidAsk = function (issuer, symbol, cb) {
 
       var bondOpt = {
         currency: symbol,
@@ -100,7 +98,13 @@ angular.module('gulpangular')
           var newPrice = typeof data.offers[0] !== 'undefined' ?
             getPriceFromOffer(data.offers[0], type) : 0;
 
-          self.setPrice(issuer, symbol, type, newPrice);
+          var priceObj = type === 'bid' ? {
+            b: +(+newPrice).toFixed(4)
+          } : {
+            a: +(+newPrice).toFixed(4)
+          };
+
+          cb(null, priceObj);
         };
       }
 
@@ -108,34 +112,26 @@ angular.module('gulpangular')
     };
 
 
-    this.updateBalances = function (cb) {
-
-      var self = this;
-
+    this.getBalances = function (cb) {
       remote.request_account_lines(Account.acc, function (err, data) { // jshint ignore:line
         if (err) {
           return cb(err);
         }
 
-        var lines = data.lines;
-        var numAccLines = lines.length;
+        var symbols = _(data.lines)
+          .filter(function (line) {
+            return RB.isValidSymbol(line.currency) ||
+              _.indexOf(RB.currencies, line.currency) > -1;
+          })
+          .map(function (line) {
+            return {
+              i: line.account,
+              s: line.currency,
+              bal: +(+line.balance).toFixed(3)
+            };
+          }).value();
 
-        if (!numAccLines) {
-          return cb(null, false);
-        }
-
-        for (var i = 0; i < numAccLines; i++) {
-
-          // Shortcuts
-
-          var issuer = lines[i].account;
-          var symbol = lines[i].currency;
-          var balance = +(+lines[i].balance).toFixed(3);
-
-          self.setBalance(issuer, symbol, balance);
-        }
-
-        cb(null);
+        cb(null, symbols);
       });
     };
 
@@ -184,7 +180,9 @@ angular.module('gulpangular')
             order.i = order.buy ? p.issuer : g.issuer;
             order.s = g.issuer !== FED ? g.currency : p.currency;
             order.p = order.buy ? +p.value / +g.value : +g.value / +p.value;
+            order.p = +(order.p).toFixed(4);
             order.v = order.buy ? +g.value : +p.value;
+            order.v = +(order.v).toFixed(4);
 
             return order;
           }).value();
