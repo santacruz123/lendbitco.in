@@ -57,6 +57,7 @@ Orders:
 <table>
   <thead>
     <tr>
+      <th>Id</th>
       <th>Issuer</th>
       <th>Symbol</th>
       <th>Type</th>
@@ -66,6 +67,7 @@ Orders:
   </thead>
   <tbody>
     <tr ng-repeat="order in orders">
+      <td>{{order.id}}</td>
       <td>{{order.i}}</td>
       <td>{{order.s}}</td>
       <td>{{order.t ? 'buy' : 'sell'}}</td>

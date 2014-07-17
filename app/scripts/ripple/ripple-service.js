@@ -27,6 +27,10 @@ angular.module('gulpangular')
 
     remote.connect();
 
+    this.setSecret = function (secret) {
+      remote.set_secret(Account.acc, secret); // jshint ignore:line
+    };
+
     this.watchBidAsk = function (issuer, symbol, cb) {
 
       var bondOpt = {
@@ -135,6 +139,12 @@ angular.module('gulpangular')
       });
     };
 
+    this.transaction = function () {
+      return remote.transaction();
+    };
+
+    this.Amount = ripple.Amount;
+
     this.updateOrders = function (cb) {
 
       remote.requestAccountOffers(Account.acc, function (err, data) {
@@ -176,6 +186,7 @@ angular.module('gulpangular')
 
             // true = buy, false = sell
 
+            order.id = offer.seq;
             order.t = _.contains(rippleBonds.currencies, g.currency);
             order.i = order.buy ? p.issuer : g.issuer;
             order.s = g.issuer !== FED ? g.currency : p.currency;
