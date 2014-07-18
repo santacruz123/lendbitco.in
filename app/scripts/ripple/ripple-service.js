@@ -3,6 +3,7 @@
 angular.module('gulpangular')
   .service('Ripple', function ($window, FED, Account, _, RB) {
 
+    var _isSetSecret;
     var ripple = $window.window.ripple;
     var rippleBonds = $window.window.rippleBonds;
     var Remote = ripple.Remote;
@@ -29,6 +30,11 @@ angular.module('gulpangular')
 
     this.setSecret = function (secret) {
       remote.set_secret(Account.acc, secret); // jshint ignore:line
+      _isSetSecret = true;
+    };
+
+    this.isSecretSet = function () {
+      return _isSetSecret;
     };
 
     this.watchBidAsk = function (issuer, symbol, cb) {

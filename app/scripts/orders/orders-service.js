@@ -25,6 +25,10 @@ angular.module('gulpangular')
 
     this.makeOrder = function (opt, cb) {
 
+      if (!Ripple.isSecretSet()) {
+        return cb('Secret not set');
+      }
+
       var tran = Ripple.transaction();
       var curr = RB.currencyCodes[opt.s[0]];
 
@@ -72,6 +76,10 @@ angular.module('gulpangular')
 
     this.cancelOrder = function (id, cb) {
 
+      if (!Ripple.isSecretSet()) {
+        return cb('Secret not set');
+      }
+
       var tran = Ripple.transaction();
       tran.offerCancel(Account.acc, id);
 
@@ -89,7 +97,7 @@ angular.module('gulpangular')
           return cb(res);
         }
 
-        cb();
+        cb(null);
       });
     };
 
