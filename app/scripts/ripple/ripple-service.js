@@ -188,11 +188,11 @@ angular.module('gulpangular')
 
             order.id = offer.seq;
             order.t = _.contains(rippleBonds.currencies, g.currency);
-            order.i = order.buy ? p.issuer : g.issuer;
+            order.i = order.t ? p.issuer : g.issuer;
             order.s = g.issuer !== FED ? g.currency : p.currency;
-            order.p = order.buy ? +p.value / +g.value : +g.value / +p.value;
+            order.p = order.t ? +g.value / +p.value : +p.value / +g.value;
             order.p = +(order.p).toFixed(4);
-            order.v = order.buy ? +g.value : +p.value;
+            order.v = order.t ? +p.value : +g.value;
             order.v = +(order.v).toFixed(4);
 
             return order;
