@@ -23,6 +23,11 @@ angular.module('gulpangular')
   });
 
 angular.module('gulpangular')
+  .service('async', function ($window) {
+    return $window.window.async;
+  });
+
+angular.module('gulpangular')
   .service('rootScopeApply', function (_, $rootScope) {
     this.apply = _.throttle($rootScope.$apply, 1000);
   });

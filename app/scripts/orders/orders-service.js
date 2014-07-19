@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Orders', function (Ripple, Account, FED, RB, _) {
+  .service('Orders', function (Ripple, Account, FED, RB, _, async) {
 
     var self = this;
     this.orders = [];
@@ -70,6 +70,58 @@ angular.module('gulpangular')
 
         cb(err, res.tx_json.Sequence); // jshint ignore:line
       });
+    };
+
+    this.cancelAllOrders = function (issuer, symbol, type, cb) {
+      var args = [];
+
+      for (var i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+      }
+
+      if (_.isFunc(args[args.length - 1])) {
+        cb = args.pop();
+      }
+
+      issuer = args.length !== 0 ? args.shift() : null;
+      symbol = args.length !== 0 ? args.shift() : null;
+      type = args.length !== 0 ? args.shift() : null;
+
+      // Arguments - done
+
+      var opt = {};
+
+      if (_.isObject(issuer)) {
+        opt = issuer;
+      } else {
+        if (issuer) {
+          opt.i = issuer;
+        }
+
+        if (symbol) {
+          opt.s = symbol;
+        }
+
+        if (!_.isUndefined(type)) {
+          opt.t = type;
+        }
+      }
+
+      var orders = this.getOrders();
+
+      async(
+        _(orders)
+        .map(function (order) {
+          return _.bind(self.cancelOrder, self, order.id);
+        }).value(),
+        function (err, data) {
+          console.log(err, data);
+          console.log('All orders deleted');
+
+          if (cb) {
+            cb();
+          }
+        });
     };
 
     this.cancelOrder = function (id, cb) {
