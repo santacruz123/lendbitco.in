@@ -56,8 +56,6 @@ angular.module('gulpangular')
 
       tran.submit(function (err, res) {
 
-        console.log(res);
-
         if (!cb) {
           return console.log(err, res);
         }

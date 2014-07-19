@@ -6,10 +6,15 @@ angular.module('gulpangular')
     var self = this;
 
     this.arr = [];
-    this.arrIndx = {};
-    this.bonds = [];
 
     this.reloadCb = function () {};
+
+    this.getIssuers = function () {
+      return _(this.arr)
+        .map('i')
+        .uniq()
+        .value();
+    };
 
     this.addSymbol = function (issuer, symbol) {
 
