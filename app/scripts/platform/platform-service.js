@@ -4,10 +4,7 @@ angular.module('gulpangular')
   .service('Platform', function (FED, Account, Ripple, _, RB) {
 
     var self = this;
-
     this.arr = [];
-
-    this.reloadCb = function () {};
 
     this.getIssuers = function () {
       return _(this.arr)
@@ -56,8 +53,6 @@ angular.module('gulpangular')
           }
           _.assign(elm, priceObj);
           console.log('Price:', elm, priceObj);
-
-          self.reloadCb();
         });
       }
     };
@@ -72,8 +67,6 @@ angular.module('gulpangular')
             _.assign(elm, balObj);
             console.log('Balance:', balObj);
           });
-
-        self.reloadCb();
 
         if (cb) {
           return cb(null);
@@ -103,10 +96,6 @@ angular.module('gulpangular')
           return e.bal !== 0 &&
             _.indexOf(RB.currencies, e.s) === -1;
         }).value();
-    };
-
-    this.setReloadCb = function (cb) {
-      this.reloadCb = cb;
     };
 
     angular.forEach(RB.currencies, function (e) {
