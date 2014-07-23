@@ -137,7 +137,7 @@ angular.module('gulpangular')
             return {
               i: line.account,
               s: line.currency,
-              bal: +(+line.balance).toFixed(3)
+              v: +(+line.balance).toFixed(3)
             };
           }).value();
 

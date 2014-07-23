@@ -28,7 +28,7 @@ angular.module('gulpangular')
       var obj = {
         i: issuer,
         s: symbol,
-        bal: 0,
+        v: 0,
         b: 0,
         a: 0
       };
@@ -63,7 +63,7 @@ angular.module('gulpangular')
         _(data)
           .map(function (balObj) {
             self.addSymbol(balObj);
-            var elm = self.arr[_.findIndex(self.arr, _.omit(balObj, 'bal'))];
+            var elm = self.arr[_.findIndex(self.arr, _.omit(balObj, 'v'))];
             _.assign(elm, balObj);
             console.log('Balance:', balObj);
           });
@@ -78,7 +78,7 @@ angular.module('gulpangular')
       return _(self.arr)
         .filter(function (e) {
           return e.i === FED &&
-            e.bal !== 0 &&
+            e.v !== 0 &&
             _.indexOf(RB.currencies, e.s) > -1;
         }).value();
     };
@@ -93,7 +93,7 @@ angular.module('gulpangular')
     this.getPositions = function () {
       return _(self.arr)
         .filter(function (e) {
-          return e.bal !== 0 &&
+          return e.v !== 0 &&
             _.indexOf(RB.currencies, e.s) === -1;
         }).value();
     };
