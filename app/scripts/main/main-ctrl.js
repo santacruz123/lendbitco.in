@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('gulpangular')
-  .controller('MainCtrl', function ($scope, $filter, RB, Account, Platform, Orders, $rootScope) {
+  .controller('MainCtrl', function ($scope, $filter, RB, Account, Platform, Orders, $rootScope, _) {
 
     // Definitions
 
@@ -19,6 +19,20 @@ angular.module('gulpangular')
 
     Platform.updateBalances(reloadCb);
     Orders.updateOrders(reloadCb);
+
+    $scope.setOrderTemplate = function (tmpl, bidask) {
+      if (!_.isUndefined(tmpl.b)) { // Bond
+        tmpl.p = bidask === 'b' ? tmpl.b : tmpl.a;
+        tmpl.t = bidask === 'b' ? true : false;
+      } else if (!_.isUndefined(tmpl.t)) { // Order
+
+      } else { // Position
+        tmpl.t = false;
+      }
+
+      $scope.preset = tmpl;
+    };
+
     $scope.preset = {};
 
     // $scope.predicate = 'b';

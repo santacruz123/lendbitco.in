@@ -1,0 +1,18 @@
+'use strict';
+
+angular.module('gulpangular')
+  .directive('account', function (Account, Ripple) {
+    return {
+      templateUrl: 'scripts/account/account-lb-account-directive.html',
+      restrict: 'E',
+      scope: {},
+      controller: function ($scope) {
+        $scope.setSecret = function (secret) {
+          Ripple.setSecret(secret);
+          $scope.isSecretSet = true;
+        };
+
+        $scope.acc = Account.acc;
+      }
+    };
+  });
