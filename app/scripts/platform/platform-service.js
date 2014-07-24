@@ -6,6 +6,10 @@ angular.module('gulpangular')
     var self = this;
     this.arr = [];
 
+    this.reloadCb = function () {
+      console.log('Reload callback : re-assign me');
+    };
+
     this.getIssuers = function () {
       return _(this.arr)
         .map('i')
@@ -53,6 +57,7 @@ angular.module('gulpangular')
           }
           _.assign(elm, priceObj);
           console.log('Price:', elm, priceObj);
+          self.reloadCb();
         });
       }
     };

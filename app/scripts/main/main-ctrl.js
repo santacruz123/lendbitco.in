@@ -17,6 +17,8 @@ angular.module('gulpangular')
 
     // Init
 
+    Platform.reloadCb = reloadCb;
+
     Platform.updateBalances(reloadCb);
     Orders.updateOrders(reloadCb);
 
