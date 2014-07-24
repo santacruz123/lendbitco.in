@@ -3,7 +3,7 @@
 angular.module('gulpangular')
   .directive('account', function (Account, Ripple) {
     return {
-      templateUrl: 'scripts/account/account-lb-account-directive.html',
+    templateUrl: 'partials/account/account-lb-account-directive.html',
       restrict: 'E',
       scope: {},
       controller: function ($scope) {

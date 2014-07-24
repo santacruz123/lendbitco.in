@@ -3,7 +3,7 @@
 angular.module('gulpangular')
   .directive('orders', function (Orders) {
     return {
-      templateUrl: 'scripts/orders/orders-directive.html',
+      templateUrl: 'partials/orders/orders-directive.html',
       restrict: 'E',
       controller: function ($scope) {
         $scope.cancelOrder = function (id) {

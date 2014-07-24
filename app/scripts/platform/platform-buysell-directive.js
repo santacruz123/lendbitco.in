@@ -3,7 +3,7 @@
 angular.module('gulpangular')
   .directive('buysell', function (Platform, Orders) {
     return {
-      templateUrl: 'scripts/platform/platform-buysell-directive.html',
+      templateUrl: 'partials/platform/platform-buysell-directive.html',
       restrict: 'E',
       scope: false,
       controller: function ($scope) {
