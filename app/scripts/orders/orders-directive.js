@@ -7,7 +7,9 @@ angular.module('gulpangular')
       restrict: 'E',
       controller: function ($scope) {
         $scope.cancelOrder = function (id) {
-          Orders.cancelOrder(id, $scope.cb());
+          Orders.cancelOrder(id, function () {
+            Orders.updateOrders($scope.reloadCb);
+          });
         };
       }
     };
