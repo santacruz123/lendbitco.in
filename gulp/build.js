@@ -5,23 +5,25 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var saveLicense = require('uglify-save-license');
 
-gulp.task('styles', function () {
+gulp.task('styles', ['clean'], function () {
   return gulp.src('app/styles/main.scss')
     .pipe($.plumber())
-    .pipe($.rubySass({style: 'expanded'}))
+    .pipe($.rubySass({
+      style: 'expanded'
+    }))
     .pipe($.autoprefixer('last 1 version'))
     .pipe(gulp.dest('.tmp/styles'))
     .pipe($.size());
 });
 
-gulp.task('scripts', function () {
+gulp.task('scripts', ['clean'], function () {
   return gulp.src('app/scripts/**/*.js')
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.size());
 });
 
-gulp.task('partials', function () {
+gulp.task('partials', ['clean'], function () {
   return gulp.src('app/partials/**/*.html')
     .pipe($.minifyHtml({
       empty: true,
@@ -29,10 +31,10 @@ gulp.task('partials', function () {
       quotes: true
     }))
     .pipe($.ngHtml2js({
-      moduleName: "gulpangular",
-      prefix: "partials/"
+      moduleName: 'gulpangular',
+      prefix: 'partials/'
     }))
-    .pipe(gulp.dest(".tmp/partials"))
+    .pipe(gulp.dest('.tmp/partials'))
     .pipe($.size());
 });
 
@@ -51,10 +53,12 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
     .pipe($.rev())
     .pipe(jsFilter)
     .pipe($.ngmin())
-    .pipe($.uglify({preserveComments: saveLicense}))
+    .pipe($.uglify({
+      preserveComments: saveLicense
+    }))
     .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap','fonts'))
+    .pipe($.replace('bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap', 'fonts'))
     .pipe($.csso())
     .pipe(cssFilter.restore())
     .pipe($.useref.restore())
@@ -64,7 +68,7 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
     .pipe($.size());
 });
 
-gulp.task('images', function () {
+gulp.task('images', ['clean'], function () {
   return gulp.src('app/images/**/*')
     .pipe($.cache($.imagemin({
       optimizationLevel: 3,
@@ -75,7 +79,7 @@ gulp.task('images', function () {
     .pipe($.size());
 });
 
-gulp.task('fonts', function () {
+gulp.task('fonts', ['clean'], function () {
   return $.bowerFiles()
     .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
     .pipe($.flatten())
@@ -84,7 +88,9 @@ gulp.task('fonts', function () {
 });
 
 gulp.task('clean', function () {
-  return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
+  return gulp.src(['.tmp', 'dist'], {
+    read: false
+  }).pipe($.clean());
 });
 
 gulp.task('build', ['html', 'partials', 'images', 'fonts']);
