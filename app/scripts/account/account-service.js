@@ -1,27 +1,83 @@
 'use strict';
 
 angular.module('gulpangular')
-  .service('Account', function ($cookieStore) {
+  .service('Account', function ($cookieStore, _) {
 
-    this.acc = $cookieStore.get('acc');
+    // Account
+    var acc = '';
 
-    if (!this.acc) {
-      var accFromPrompt = prompt('Your Ripple account', this.acc);
-      var regexp = accFromPrompt.match(/r[\w]{33}/);
+    this.__defineGetter__('acc', function () {
+      return acc || $cookieStore.get('acc');
+    });
+
+    this.__defineSetter__('acc', function (val) {
+      var regexp = val.match(/r[\w]{33}/);
       if (regexp[0]) {
-        this.acc = regexp[0];
-        console.log(this.acc);
-        $cookieStore.put('acc', this.acc);
+        acc = regexp[0];
+        $cookieStore.put('acc', acc);
+        return true;
+      } else {
+        return false;
       }
-    }
+    });
 
-    this.bonds = [{
-      i: 'rMaQ3eEFJURCfEc7GZEUVFWnRmE2Y1Au1K',
-      s: 'UFF'
-    }];
+    // Account END
 
-    // var secretFromPrompt = prompt('Secret key for ' + accFromCookie);
+    // AddressBook
 
-    // Ripple.setSecret(accFromCookie, secretFromPrompt);
+    this.addIssuer = function (issuer, nickname) {
+      var ab = $cookieStore.get('AddressBook');
+
+      if (_.isUndefined()) {
+        ab = {};
+      }
+
+      ab[issuer] = nickname;
+      $cookieStore.put('AddressBook', ab);
+    };
+
+    this.removeIssuer = function (issuer) {
+      var ab = $cookieStore.get('AddressBook');
+      delete ab[issuer];
+      $cookieStore.put('AddressBook', ab);
+    };
+
+    this.getAddressBook = function () {
+      return $cookieStore.get('AddressBook');
+    };
+
+    this.addFavBond = function (bond) {
+      var favs = $cookieStore.get('Favs');
+
+      if (!favs) {
+        favs = {
+          bonds: []
+        };
+      }
+
+      var cleanBond = _.pick(bond, ['i', 's']);
+
+      if (!_.find(favs.bonds, cleanBond)) {
+        favs.bonds.push(cleanBond);
+      }
+
+      $cookieStore.put('Favs', favs);
+    };
+
+    this.removeFavBond = function (bond) {
+      var favs = $cookieStore.get('Favs');
+      favs.bonds = _.remove(favs.bonds, _.pick(bond, ['i', 's']));
+      $cookieStore.put('Favs', favs);
+    };
+
+    this.getFavBonds = function () {
+      var favs = $cookieStore.get('Favs');
+
+      if (!favs) {
+        return [];
+      } else {
+        return favs.bonds;
+      }
+    };
 
   });
