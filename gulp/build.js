@@ -5,7 +5,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var saveLicense = require('uglify-save-license');
 
-gulp.task('styles', ['clean'], function () {
+gulp.task('styles', function () {
   return gulp.src('app/styles/main.scss')
     .pipe($.plumber())
     .pipe($.rubySass({
@@ -16,14 +16,14 @@ gulp.task('styles', ['clean'], function () {
     .pipe($.size());
 });
 
-gulp.task('scripts', ['clean'], function () {
+gulp.task('scripts', function () {
   return gulp.src('app/scripts/**/*.js')
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.size());
 });
 
-gulp.task('partials', ['clean'], function () {
+gulp.task('partials', function () {
   return gulp.src('app/partials/**/*.html')
     .pipe($.minifyHtml({
       empty: true,
@@ -68,7 +68,7 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
     .pipe($.size());
 });
 
-gulp.task('images', ['clean'], function () {
+gulp.task('images', function () {
   return gulp.src('app/images/**/*')
     .pipe($.cache($.imagemin({
       optimizationLevel: 3,
@@ -79,7 +79,7 @@ gulp.task('images', ['clean'], function () {
     .pipe($.size());
 });
 
-gulp.task('fonts', ['clean'], function () {
+gulp.task('fonts', function () {
   return $.bowerFiles()
     .pipe($.filter('**/*.{eot,svg,ttf,woff}'))
     .pipe($.flatten())
