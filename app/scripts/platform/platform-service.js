@@ -37,7 +37,9 @@ angular.module('gulpangular')
         a: 0
       };
 
-      if (_.some(self.arr, obj)) {
+      if (_.find(self.arr, function (e) {
+        return e.i === obj.i && e.s === obj.s;
+      })) {
         return;
       }
 
@@ -107,5 +109,5 @@ angular.module('gulpangular')
       self.addSymbol(FED, e);
     });
 
-    angular.forEach(Account.bonds, self.addSymbol);
+    angular.forEach(Account.getFavBonds(), self.addSymbol);
   });

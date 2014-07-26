@@ -15,6 +15,7 @@ Watchlist:
 <table>
   <thead>
     <tr>
+      <th>Fav</th>
       <th>Issuer</th>
       <th>Symbol</th>
       <th>Size</th>
@@ -27,6 +28,7 @@ Watchlist:
   </thead>
   <tbody>
     <tr ng-repeat="bond in bonds track by bond.i + bond.s | filter:filter | orderBy:predicate:reverse">
+      <td><lb-bond-fav bond="bond"></td>
       <td>{{bond.i}}</td>
       <td>{{bond.s}}</td>
       <td>{{bond.v}}</td>
