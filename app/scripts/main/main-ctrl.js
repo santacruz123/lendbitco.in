@@ -1,7 +1,11 @@
 'use strict';
 
 angular.module('gulpangular')
-  .controller('MainCtrl', function ($scope, $filter, RB, Account, Platform, Orders, $rootScope, _) {
+  .controller('MainCtrl', function ($scope, $filter, $stateParams, RB, Account, Platform, Orders, $rootScope, _) {
+
+    if (!_.isUndefined($stateParams.address)) {
+      Account.acc = $stateParams.address;
+    }
 
     // Definitions
 

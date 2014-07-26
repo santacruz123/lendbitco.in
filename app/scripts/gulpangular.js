@@ -7,6 +7,10 @@ angular.module('gulpangular', ['ngCookies', 'ui.router', 'percentage'])
         url: '/',
         templateUrl: 'partials/main.html',
         controller: 'MainCtrl'
+      }).state('address', {
+        url: '/{address:r[\\w]{33}}',
+        templateUrl: 'partials/main.html',
+        controller: 'MainCtrl'
       });
 
     $urlRouterProvider.otherwise('/');
