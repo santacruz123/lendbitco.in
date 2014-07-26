@@ -19,6 +19,7 @@ angular.module('gulpangular')
 
     Platform.reloadCb = reloadCb;
 
+    $scope.issuers = Platform.getIssuers();
     Platform.updateBalances(reloadCb);
     Orders.updateOrders(reloadCb);
 

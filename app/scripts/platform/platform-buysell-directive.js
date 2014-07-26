@@ -25,8 +25,6 @@ angular.module('gulpangular')
             Orders.updateOrders($scope.reloadCb);
           });
         };
-
-        $scope.issuers = Platform.getIssuers();
       }
     };
   });

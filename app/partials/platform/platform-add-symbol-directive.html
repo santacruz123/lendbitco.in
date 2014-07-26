@@ -1,0 +1,9 @@
+<div>
+  <select ng-model="symbol.i" ng-options="i as i for i in issuers"></select><br/>
+  Symbol: <input type="text" ng-model='symbol.s'><br/>
+  OR <br/>
+
+  Issuer:symbol : <input type="text" ng-model='issuersymbol'><br/>
+
+  <button ng-click="addSymbol(symbol,issuersymbol)">Add symbol</button>
+</div>
