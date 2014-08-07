@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .controller('MainCtrl', function ($scope, $filter, $stateParams, RB, Account, Platform, Orders, $rootScope, _) {
 
     if (!_.isUndefined($stateParams.address)) {
@@ -30,7 +30,7 @@ angular.module('gulpangular')
     $scope.setOrderTemplate = function (tmpl, bidask) {
       if (!_.isUndefined(tmpl.b)) { // Bond
         tmpl.p = bidask === 'b' ? tmpl.b : tmpl.a;
-        tmpl.t = bidask === 'b' ? true : false;
+        tmpl.t = bidask === 'b';
       } else if (!_.isUndefined(tmpl.t)) { // Order
 
       } else { // Position

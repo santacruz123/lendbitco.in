@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('Orders', function (Ripple, Account, FED, RB, _, async) {
 
     var self = this;

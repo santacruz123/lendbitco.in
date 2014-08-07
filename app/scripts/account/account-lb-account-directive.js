@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('account', function (Account, Ripple) {
     return {
-    templateUrl: 'partials/account/account-lb-account-directive.html',
+      templateUrl: 'partials/account/account-lb-account-directive.html',
       restrict: 'E',
       scope: {},
       controller: function ($scope) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('lbExpire', function () {
     return {
       template: '{{expMonth|date:dtFormat}} ({{daysLeft}} days)',

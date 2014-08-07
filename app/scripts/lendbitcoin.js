@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular', ['ngCookies', 'ui.router', 'percentage'])
+angular.module('lendbitcoin', ['ngCookies', 'ui.router', 'percentage'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
@@ -16,22 +16,22 @@ angular.module('gulpangular', ['ngCookies', 'ui.router', 'percentage'])
     $urlRouterProvider.otherwise('/');
   });
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('_', function ($window) {
     return $window.window._;
   });
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('RB', function ($window) {
     return $window.window.rippleBonds;
   });
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('async', function ($window) {
     return $window.window.async;
   });
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('rootScopeApply', function (_, $rootScope) {
     this.apply = _.throttle($rootScope.$apply, 1000);
   });

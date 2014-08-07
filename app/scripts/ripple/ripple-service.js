@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('Ripple', function ($window, FED, Account, _, RB) {
 
     var _isSetSecret;

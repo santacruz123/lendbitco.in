@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('addSymbol', function (Platform) {
     return {
       templateUrl: 'partials/platform/platform-add-symbol-directive.html',

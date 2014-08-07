@@ -31,7 +31,7 @@ gulp.task('partials', function () {
       quotes: true
     }))
     .pipe($.ngHtml2js({
-      moduleName: 'gulpangular',
+      moduleName: 'lendbitcoin',
       prefix: 'partials/'
     }))
     .pipe(gulp.dest('.tmp/partials'))

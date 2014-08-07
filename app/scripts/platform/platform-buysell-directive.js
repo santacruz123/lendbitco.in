@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('buysell', function (Platform, Orders) {
     return {
       templateUrl: 'partials/platform/platform-buysell-directive.html',

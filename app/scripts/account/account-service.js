@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .service('Account', function ($cookieStore, _) {
 
     // Account

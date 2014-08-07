@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('lbBondFav', function (Account, _) {
     return {
       template: '<a ng-click="toggleFav()">{{isFav}}</a>',

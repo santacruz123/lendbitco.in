@@ -1,5 +1,5 @@
 {
-  "name": "gulpangular",
+  "name": "lendbitcoin",
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
@@ -36,7 +36,6 @@
     "http-proxy": "~1.1.4",
     "phantomjs": "~1.9.7-8",
     "gulp-protractor": "0.0.7",
-    "gulp-replace": "~0.3.0",
     "gulp-plumber": "^0.6.3",
     "protractor": "~0.24.2",
     "uglify-save-license": "^0.4.1"

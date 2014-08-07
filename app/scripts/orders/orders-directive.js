@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('gulpangular')
+angular.module('lendbitcoin')
   .directive('orders', function (Orders) {
     return {
       templateUrl: 'partials/orders/orders-directive.html',
