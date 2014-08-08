@@ -5,8 +5,14 @@ angular.module('lendbitcoin', ['ngCookies', 'ui.router', 'percentage', 'xeditabl
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'partials/main.html',
-        controller: 'MainCtrl'
+        views: {
+          'header': {
+            templateUrl: 'partials/header.html'
+          },
+          'body': {
+            templateUrl: 'partials/main.html'
+          }
+        }
       }).state('address', {
         url: '/{address:r[\\w]{33}}',
         templateUrl: 'partials/main.html',

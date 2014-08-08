@@ -24,7 +24,6 @@ angular.module('lendbitcoin')
     Platform.reloadCb = reloadCb;
 
     $scope.issuers = Platform.getIssuers();
-    Platform.updateBalances(reloadCb);
     Orders.updateOrders(reloadCb);
 
     $scope.setOrderTemplate = function (tmpl, bidask) {

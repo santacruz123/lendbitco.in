@@ -2,7 +2,7 @@
 <html class="no-js" ng-app="lendbitcoin">
   <head>
     <meta charset="utf-8">
-    <title>frontend</title>
+    <title>Lend Bitcoin</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -26,7 +26,17 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div ui-view></div>
+    <div class="container" ng-controller='MainCtrl'>
+      <div class="row">
+        <div ui-view="header"></div>
+      </div>
+      <div class="row">
+        <div ui-view="body"></div>
+      </div>
+      <div class="row">
+        <div ui-view="footer"></div>
+      </div>
+    </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
@@ -61,6 +71,7 @@
     <script src="scripts/lendbitcoin.js"></script>
     <script src="scripts/fed.js"></script>
     <script src="scripts/account/account-lb-account-directive.js"></script>
+    <script src="scripts/account/account-lb-balance-directive.js"></script>
     <script src="scripts/orders/orders-directive.js"></script>
     <script src="scripts/bonds/bonds-lb-expire-directive.js"></script>
     <script src="scripts/bonds/bonds-lb-bond-fav-directive.js"></script>
