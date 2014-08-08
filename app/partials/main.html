@@ -1,15 +1,23 @@
-<account></account>
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">Balance:
+      <table>
+          <tr>
+            <td ng-repeat="curr in balances">
+              <strong>{{curr.s}}</strong> : {{curr.v}}
+            </td>
+          </tr>
+      </table>
+    </div>
+    <div class="col-md-8"><account></account></div>
+  </div>
+</div>
+
+
+
 <add-symbol></add-symbol>
 <buysell preset="preset"></buysell>
 
-Balance:
-<table>
-    <tr>
-      <td ng-repeat="curr in balances">
-        <strong>{{curr.s}}</strong> : {{curr.v}}
-      </td>
-    </tr>
-</table>
 
 Watchlist:
 <table>

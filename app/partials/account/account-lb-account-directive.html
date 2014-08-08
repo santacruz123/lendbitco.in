@@ -1,5 +1,6 @@
-Account :<a href="#" editable-text="user.acc">{{ user.acc || 'empty' }}</a>
-<div ng-if="!isSecretSet">
-Password : <input type="text" ng-model="user.secret" />
-<button ng-click="setSecret(user.secret)">Set secret</button>
+<div class="col-md-6">
+  Account: <a href="#" editable-text="user.acc">{{ user.acc || 'Your ripple address here...' }}</a>
+</div>
+<div class="col-md-6" ng-if="!isSecretSet">
+  Password : <input type="text" ng-model="user.secret" /><button ng-click="setSecret(user.secret)">Set secret</button>
 </div>
