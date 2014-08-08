@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('lendbitcoin', ['ngCookies', 'ui.router', 'percentage'])
+angular.module('lendbitcoin', ['ngCookies', 'ui.router', 'percentage', 'xeditable'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {

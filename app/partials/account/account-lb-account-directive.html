@@ -1,5 +1,5 @@
-Account :{{acc}}
+Account :<a href="#" editable-text="user.acc">{{ user.acc || 'empty' }}</a>
 <div ng-if="!isSecretSet">
-Password : <input type="text" ng-model="secret" />
-<button ng-click="setSecret(secret)">Set secret</button>
+Password : <input type="text" ng-model="user.secret" />
+<button ng-click="setSecret(user.secret)">Set secret</button>
 </div>

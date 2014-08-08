@@ -7,12 +7,20 @@ angular.module('lendbitcoin')
       restrict: 'E',
       scope: {},
       controller: function ($scope) {
+        $scope.$watch('user.acc', function (n) {
+          Account.acc = n;
+          $scope.isSecretSet = false;
+        });
+
         $scope.setSecret = function (secret) {
           Ripple.setSecret(secret);
+          $scope.user.secret = '';
           $scope.isSecretSet = true;
         };
 
-        $scope.acc = Account.acc;
+        $scope.user = {
+          acc: Account.acc
+        };
       }
     };
   });
