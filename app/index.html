@@ -26,16 +26,10 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container" ng-controller='MainCtrl'>
-      <div class="row">
-        <div ui-view="header"></div>
-      </div>
-      <div class="row">
-        <div ui-view="body"></div>
-      </div>
-      <div class="row">
-        <div ui-view="footer"></div>
-      </div>
+    <div ng-controller='MainCtrl'>
+      <div ui-view="header"></div>
+      <div ui-view="body"></div>
+      <div ui-view="footer"></div>
     </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
