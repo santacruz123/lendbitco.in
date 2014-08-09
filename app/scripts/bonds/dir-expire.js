@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('lbExpire', function () {
+  .directive('expire', function () {
     return {
       template: '{{expMonth|date:dtFormat}} ({{daysLeft}} days)',
       restrict: 'E',

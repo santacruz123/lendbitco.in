@@ -3,7 +3,7 @@
 angular.module('lendbitcoin')
   .directive('buysell', function (Platform, Orders) {
     return {
-      templateUrl: 'partials/platform/platform-buysell-directive.html',
+      templateUrl: 'partials/platform/dir-buysell.html',
       restrict: 'E',
       scope: false,
       controller: function ($scope) {

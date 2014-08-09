@@ -3,7 +3,7 @@
 angular.module('lendbitcoin')
   .directive('account', function (Account, Ripple) {
     return {
-      templateUrl: 'partials/account/account-lb-account-directive.html',
+      templateUrl: 'partials/account/dir.html',
       restrict: 'E',
       scope: {},
       controller: function ($scope) {

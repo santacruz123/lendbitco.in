@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('lbBondFav', function (Account, _) {
+  .directive('bondFav', function (Account, _) {
     return {
       template: '<a ng-click="toggleFav()">{{isFav}}</a>',
       restrict: 'E',

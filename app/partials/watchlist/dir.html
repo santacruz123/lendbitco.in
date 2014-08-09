@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th>Fav</th>
+      <th>Issuer</th>
+      <th>Symbol</th>
+      <th>Size</th>
+      <th>Expiration</th>
+      <th>Bid</th>
+      <th>Bid YTM</th>
+      <th>Ask</th>
+      <th>Ask YTM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="bond in bonds track by bond.i + bond.s | filter:filter | orderBy:predicate:reverse">
+      <td><lb-bond-fav bond="bond"></td>
+      <td>{{bond.i}}</td>
+      <td>{{bond.s}}</td>
+      <td>{{bond.v}}</td>
+      <td><lb-expire date="{{bond.e}}"></td>
+      <td ng-click="setOrderTemplate(bond,'b')">{{bond.b}}</td>
+      <td>{{rb.YTMNowSymbol(bond.s,bond.b)|percentage}}</td>
+      <td ng-click="setOrderTemplate(bond,'a')">{{bond.a}}</td>
+      <td>{{rb.YTMNowSymbol(bond.s,bond.a)|percentage}}</td>
+    </tr>
+  </tbody>
+</table>

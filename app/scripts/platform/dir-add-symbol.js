@@ -3,7 +3,7 @@
 angular.module('lendbitcoin')
   .directive('addSymbol', function (Platform) {
     return {
-      templateUrl: 'partials/platform/platform-add-symbol-directive.html',
+      templateUrl: 'partials/platform/dir-buysell.html',
       restrict: 'E',
       scope: false,
       controller: function ($scope) {

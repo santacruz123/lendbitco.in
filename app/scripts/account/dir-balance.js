@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('lbBalance', function (Platform, $rootScope) {
+  .directive('balance', function (Platform, $rootScope) {
     return {
-      templateUrl: 'partials/account/account-lb-balance-directive.html',
+      templateUrl: 'partials/account/dir-balance.html',
       restrict: 'E',
       controller: function ($scope) {
         Platform.updateBalances(function () {
