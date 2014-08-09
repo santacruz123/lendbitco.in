@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('addSymbol', function (Platform) {
+  .directive('platformAddSymbol', function (Platform) {
     return {
-      templateUrl: 'partials/platform/dir-buysell.html',
+      templateUrl: 'partials/platform/dir-add-symbol.html',
       restrict: 'E',
       scope: false,
       controller: function ($scope) {

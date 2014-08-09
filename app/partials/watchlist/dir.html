@@ -14,11 +14,11 @@
   </thead>
   <tbody>
     <tr ng-repeat="bond in bonds track by bond.i + bond.s | filter:filter | orderBy:predicate:reverse">
-      <td><lb-bond-fav bond="bond"></td>
+      <td><bonds-fav bond="bond"></bonds-fav></td>
       <td>{{bond.i}}</td>
       <td>{{bond.s}}</td>
       <td>{{bond.v}}</td>
-      <td><lb-expire date="{{bond.e}}"></td>
+      <td><bonds-expire date="{{bond.e}}"></bonds-expire></td>
       <td ng-click="setOrderTemplate(bond,'b')">{{bond.b}}</td>
       <td>{{rb.YTMNowSymbol(bond.s,bond.b)|percentage}}</td>
       <td ng-click="setOrderTemplate(bond,'a')">{{bond.a}}</td>
