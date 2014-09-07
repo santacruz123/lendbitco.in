@@ -8,7 +8,8 @@ var saveLicense = require('uglify-save-license');
 gulp.task('styles', function () {
   return gulp.src('app/styles/main.scss')
     .pipe($.plumber())
-    .pipe($.rubySass({
+    //.pipe($.rubySass({
+    .pipe($.sass({
       style: 'expanded'
     }))
     .pipe($.autoprefixer('last 1 version'))
