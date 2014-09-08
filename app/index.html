@@ -21,17 +21,41 @@
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
   </head>
-  <body>
+  <body ng-controller='MainCtrl'>
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div ng-controller='MainCtrl'>
+    <div class="container-fluid">
+      <div class="pull-left">
+        <div>
+          <account-balance></account-balance>
+        </div>
+      </div>
+      <div class="pull-right">
+        <account></account>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="pull-right">
+        <div id="tradetab">
+          <buysell preset="preset"></buysell>
+        </div>
+        <div id="positions">
+          <positions></positions>
+        </div>
+        <div id="orders">
+          <orders cb="reloadCb"></orders>
+        </div>
+      </div>
+    </div>
+
+<!--     <div ng-controller='MainCtrl'>
       <div ui-view="header"></div>
       <div ui-view="body"></div>
       <div ui-view="footer"></div>
     </div>
-
+ -->
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       /* jshint ignore:start */
