@@ -15,11 +15,11 @@ angular.module('lendbitcoin')
       local_fee: true,
       fee_cushion: 1.5,
       servers: [{
-        host: 's1.ripple.com',
+        host: 's-east.ripple.com',
         port: 443,
         secure: true
       }, {
-        host: 's2.ripple.com',
+        host: 's-west.ripple.com',
         port: 443,
         secure: true
       }]
