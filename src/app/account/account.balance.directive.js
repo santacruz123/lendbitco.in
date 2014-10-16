@@ -9,6 +9,7 @@ angular.module('lendbitcoin')
         Platform.updateBalances();
         $rootScope.$on('balance:update', function () {
           $scope.balances = Platform.getBalances();
+          $rootScope.$apply();
         });
       }
     };

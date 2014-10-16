@@ -3,7 +3,6 @@
 
   function Platform(FED, Account, Ripple, _, RB, $rootScope) {
 
-    var self = this;
     var arr = [];
 
     $rootScope.$on('bond:price', processPrice);
@@ -53,6 +52,7 @@
 
         _.defaults(obj, def);
         arr.push(obj);
+        $rootScope.$broadcast('bond:new');
       }
     }
 
