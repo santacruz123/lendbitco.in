@@ -1,113 +1,98 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .service('Platform', function (FED, Account, Ripple, _, RB) {
+  function Platform(FED, Account, Ripple, _, RB, $rootScope) {
 
     var self = this;
-    this.arr = [];
+    var arr = [];
 
-    this.reloadCb = function () {
-      console.log('Reload callback : re-assign me');
-    };
+    $rootScope.$on('bond:price', processPrice);
+    $rootScope.$on('balance:change', processBalance);
+
+    function processPrice(event, obj) {
+      updateSymbol(obj);
+    }
+
+    function processBalance(event, obj) {
+      _(obj).forEach(updateSymbol);
+    }
+
+    function updateSymbol(obj) {
+      if (!obj.i || !obj.s || obj.s === 'XRP') {
+        console.log('updateSymbol - Invalid symbol supplied', obj);
+        return false;
+      }
+
+      var index = _.findIndex(arr, function findSymbol(fromArr) {
+        return !!(obj.i === fromArr.i && obj.s === fromArr.s);
+      });
+
+      if (index !== -1) {
+        _.assign(arr[index], obj);
+        console.log('Updating', obj);
+      } else {
+
+        // New symbol
+
+        var isSymbol = RB.isSymbol(obj.s);
+        var isCurrency = RB.isCurrency(obj.s);
+
+        if (!(isSymbol || isCurrency)) {
+          console.log('updateSymbol - new - Invalid symbol supplied');
+          return;
+        }
+
+        var def = {v : 0, b : 0, a : 0};
+
+        if (isSymbol) {
+          def.e = RB.getExpDate(obj.s);
+          Ripple.watchBidAsk(obj);
+        }
+
+        _.defaults(obj, def);
+        arr.push(obj);
+      }
+    }
 
     this.getIssuers = function () {
-      return _(this.arr)
+      return _(arr)
         .map('i')
         .uniq()
         .value();
     };
 
-    this.addSymbol = function (issuer, symbol) {
-
-      if (_.isObject(issuer)) {
-        var opt = issuer;
-        issuer = opt.issuer || opt.i;
-        symbol = opt.symbol || opt.s;
-      }
-
-      if (symbol === 'XRP') {
-        return false;
-      }
-
-      var obj = {
-        i : issuer,
-        s : symbol,
-        v : 0,
-        b : 0,
-        a : 0
-      };
-
-      if (_.find(self.arr, function (e) {
-        return e.i === obj.i && e.s === obj.s;
-      })) {
-        return;
-      }
-
-      var isBond = RB.isValidSymbol(symbol);
-
-      if (isBond) {
-        obj.e = RB.getExpDate(symbol);
-      }
-
-      var index = self.arr.push(obj);
-      var elm = self.arr[--index];
-
-      if (isBond && _.indexOf(RB.currencies, symbol) === -1) {
-        Ripple.watchBidAsk(issuer, symbol, function (err, priceObj) {
-          if (err) {
-            return console.log('Watch watchBidAsk error:', err);
-          }
-          _.assign(elm, priceObj);
-          console.log('Price:', elm, priceObj);
-          self.reloadCb();
-        });
-      }
-    };
-
-    this.updateBalances = function (cb) {
-      Ripple.getBalances(function (err, data) {
-
-        _(data)
-          .map(function (balObj) {
-            self.addSymbol(balObj);
-            var elm = self.arr[_.findIndex(self.arr, _.omit(balObj, 'v'))];
-            _.assign(elm, balObj);
-            console.log('Balance:', balObj);
-          });
-
-        if (cb) {
-          return cb(null);
-        }
-      });
-    };
+    this.updateBalances = Ripple.getBalances;
 
     this.getBalances = function () {
       return _(self.arr)
-        .filter(function (e) {
-          return e.i === FED &&
-            e.v !== 0 &&
-            _.indexOf(RB.currencies, e.s) > -1;
-        }).value();
+        .filter(function (symbol) {
+          return symbol.i === FED && symbol.v !== 0 && RB.isCurrency(symbol.s);
+        })
+        .value();
     };
 
     this.getBonds = function () {
-      return _(self.arr)
-        .filter(function (e) {
-          return _.indexOf(RB.currencies, e.s) === -1;
-        }).value();
+      return _(arr)
+        .filter('e')
+        .value();
     };
 
     this.getPositions = function () {
-      return _(self.arr)
-        .filter(function (e) {
-          return e.v !== 0 &&
-            _.indexOf(RB.currencies, e.s) === -1;
-        }).value();
+      return _(arr)
+        .filter('v')
+        .filter('e')
+        .value();
     };
 
-    angular.forEach(RB.currencies, function (e) {
-      self.addSymbol(FED, e);
+    angular.forEach(RB.currencies, function (currencyCode) {
+      updateSymbol({i : FED, s : currencyCode});
     });
 
-    angular.forEach(Account.getFavBonds(), self.addSymbol);
-  });
+    angular.forEach(Account.getFavBonds(), updateSymbol);
+  }
+
+  angular
+    .module('lendbitcoin')
+    .service('Platform', Platform);
+})
+();

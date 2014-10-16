@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .service('Ripple', function ($window, FED, Account, _, RB) {
+  function Ripple($window, FED, Account, _, RB, $rootScope) {
 
     var _isSetSecret;
     var ripple = $window.window.ripple;
@@ -40,7 +40,10 @@ angular.module('lendbitcoin')
       return _isSetSecret;
     };
 
-    this.watchBidAsk = function (issuer, symbol, cb) {
+    this.watchBidAsk = function (obj) {
+
+      var issuer = obj.i;
+      var symbol = obj.s;
 
       var bondOpt = {
         currency : symbol,
@@ -112,28 +115,34 @@ angular.module('lendbitcoin')
             getPriceFromOffer(data.offers[0], type) : 0;
 
           var priceObj = type === 'bid' ? {
+            i : issuer,
+            s : symbol,
             b : +(+newPrice).toFixed(4)
           } : {
+            i : issuer,
+            s : symbol,
             a : +(+newPrice).toFixed(4)
           };
 
-          cb(null, priceObj);
+          $rootScope.$broadcast('bond:price', priceObj);
         };
       }
 
       angular.forEach(['bid', 'ask'], getPricesInit);
     };
 
+    this.getBalances = function () {
 
-    this.getBalances = function (cb) {
-      remote.request_account_lines(Account.acc, function (err, data) { // jshint ignore:line
+      /*jshint camelcase: false */
+      remote.request_account_lines(Account.acc, function (err, data) {
         if (err) {
-          return cb(err);
+          console.log('request_account_lines error - ', err);
+          return;
         }
 
         var symbols = _(data.lines)
           .filter(function (line) {
-            return RB.isValidSymbol(line.currency) ||
+            return RB.isSymbol(line.currency) ||
               _.indexOf(RB.currencies, line.currency) > -1;
           })
           .map(function (line) {
@@ -144,7 +153,7 @@ angular.module('lendbitcoin')
             };
           }).value();
 
-        cb(null, symbols);
+        $rootScope.$broadcast('balance:change', symbols);
       });
     };
 
@@ -175,9 +184,9 @@ angular.module('lendbitcoin')
                   offer.taker_pays.issuer === FED);
 
           var isBond =
-                (rippleBonds.isValidSymbol(offer.taker_gets.currency) &&
+                (rippleBonds.isSymbol(offer.taker_gets.currency) &&
                   offer.taker_gets.issuer !== FED) ||
-                (rippleBonds.isValidSymbol(offer.taker_pays.currency) &&
+                (rippleBonds.isSymbol(offer.taker_pays.currency) &&
                   offer.taker_pays.issuer !== FED);
 
           /* jshint ignore:end */
@@ -210,5 +219,9 @@ angular.module('lendbitcoin')
         cb(null, orders);
       });
     };
+  }
 
-  });
+  angular
+    .module('lendbitcoin')
+    .service('Ripple', Ripple);
+})();

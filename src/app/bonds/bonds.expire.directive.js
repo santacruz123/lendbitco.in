@@ -14,7 +14,7 @@ angular.module('lendbitcoin')
         var now = new Date();
         var nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60 * 1000);
 
-        $scope.daysLeft = Math.round((expDate.getTime() - nowUTC) / 24 / 60 / 60 / 1000, 1);
+        $scope.daysLeft = Math.round((expDate.getTime() - nowUTC) / 24 / 60 / 60 / 1000);
         $scope.dtFormat = $scope.daysLeft >= 365 ? 'MMM y' : 'MMM';
       }
     };
