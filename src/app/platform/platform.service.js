@@ -11,10 +11,12 @@
 
     function processPrice(event, obj) {
       updateSymbol(obj);
+      $rootScope.$broadcast('bond:update');
     }
 
     function processBalance(event, obj) {
       _(obj).forEach(updateSymbol);
+      $rootScope.$broadcast('balance:update');
     }
 
     function updateSymbol(obj) {
@@ -64,7 +66,7 @@
     this.updateBalances = Ripple.getBalances;
 
     this.getBalances = function () {
-      return _(self.arr)
+      return _(arr)
         .filter(function (symbol) {
           return symbol.i === FED && symbol.v !== 0 && RB.isCurrency(symbol.s);
         })
