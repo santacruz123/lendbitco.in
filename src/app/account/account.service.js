@@ -51,7 +51,7 @@ angular.module('lendbitcoin')
 
       if (!favs) {
         favs = {
-          bonds: []
+          bonds : []
         };
       }
 

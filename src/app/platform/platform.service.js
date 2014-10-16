@@ -30,11 +30,11 @@ angular.module('lendbitcoin')
       }
 
       var obj = {
-        i: issuer,
-        s: symbol,
-        v: 0,
-        b: 0,
-        a: 0
+        i : issuer,
+        s : symbol,
+        v : 0,
+        b : 0,
+        a : 0
       };
 
       if (_.find(self.arr, function (e) {

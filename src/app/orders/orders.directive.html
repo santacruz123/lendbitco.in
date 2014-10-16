@@ -1,23 +1,23 @@
 Orders:
 <table>
-  <thead>
+    <thead>
     <tr>
-      <th>Id</th>
-      <th>Issuer</th>
-      <th>Symbol</th>
-      <th>Type</th>
-      <th>Price</th>
-      <th>Size</th>
+        <th>Id</th>
+        <th>Issuer</th>
+        <th>Symbol</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Size</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <tr ng-repeat="order in orders" ng-click="setOrderTemplate(order)">
-      <td ng-dblclick="cancelOrder(order.id)">{{order.id}}</td>
-      <td>{{order.i}}</td>
-      <td>{{order.s}}</td>
-      <td>{{order.t ? 'buy' : 'sell'}}</td>
-      <td>{{order.p}}</td>
-      <td>{{order.v}}</td>
+        <td ng-dblclick="cancelOrder(order.id)">{{order.id}}</td>
+        <td>{{order.i}}</td>
+        <td>{{order.s}}</td>
+        <td>{{order.t ? 'buy' : 'sell'}}</td>
+        <td>{{order.p}}</td>
+        <td>{{order.v}}</td>
     </tr>
-  </tbody>
+    </tbody>
 </table>

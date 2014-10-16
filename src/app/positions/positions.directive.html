@@ -1,17 +1,17 @@
 Positions:
 <table>
-  <thead>
+    <thead>
     <tr>
-      <th>Issuer</th>
-      <th>Symbol</th>
-      <th>Size</th>
+        <th>Issuer</th>
+        <th>Symbol</th>
+        <th>Size</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     <tr ng-repeat="row in positions" ng-click="setOrderTemplate(row)">
-      <td>{{row.i}}</td>
-      <td>{{row.s}}</td>
-      <td>{{row.v}}</td>
+        <td>{{row.i}}</td>
+        <td>{{row.s}}</td>
+        <td>{{row.v}}</td>
     </tr>
-  </tbody>
+    </tbody>
 </table>

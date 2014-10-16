@@ -3,12 +3,12 @@
 angular.module('lendbitcoin')
   .directive('bondsExpire', function () {
     return {
-      template: '{{expMonth|date:dtFormat}} ({{daysLeft}} days)',
-      restrict: 'E',
-      scope: {
-        date: '@'
+      template   : '{{expMonth|date:dtFormat}} ({{daysLeft}} days)',
+      restrict   : 'E',
+      scope      : {
+        date : '@'
       },
-      controller: function ($scope) {
+      controller : function ($scope) {
         var expDate = new Date($scope.date.replace(/"/g, ''));
         $scope.expMonth = new Date(expDate.getTime() - 1);
         var now = new Date();

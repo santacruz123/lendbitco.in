@@ -10,19 +10,22 @@ angular.module('lendbitcoin')
 
     var remote = new Remote({
       /* jshint ignore:start */
-      trusted: true,
-      local_signing: true,
-      local_fee: true,
-      fee_cushion: 1.5,
-      servers: [{
-        host: 's-east.ripple.com',
-        port: 443,
-        secure: true
-      }, {
-        host: 's-west.ripple.com',
-        port: 443,
-        secure: true
-      }]
+      trusted       : true,
+      local_signing : true,
+      local_fee     : true,
+      fee_cushion   : 1.5,
+      servers       : [
+        {
+          host   : 's-east.ripple.com',
+          port   : 443,
+          secure : true
+        },
+        {
+          host   : 's-west.ripple.com',
+          port   : 443,
+          secure : true
+        }
+      ]
       /* jshint ignore:end */
     });
 
@@ -40,13 +43,13 @@ angular.module('lendbitcoin')
     this.watchBidAsk = function (issuer, symbol, cb) {
 
       var bondOpt = {
-        currency: symbol,
-        issuer: issuer
+        currency : symbol,
+        issuer   : issuer
       };
 
       var currencyOpt = {
-        currency: rippleBonds.currencyCodes[symbol[0]],
-        issuer: FED
+        currency : rippleBonds.currencyCodes[symbol[0]],
+        issuer   : FED
       };
 
       function getPriceFromOffer(offer, type) {
@@ -68,15 +71,15 @@ angular.module('lendbitcoin')
       function getPricesInit(type) {
 
         var optBook = type === 'bid' ? {
-          issuer_pays: bondOpt.issuer, // jshint ignore:line
-          currency_pays: bondOpt.currency, // jshint ignore:line
-          issuer_gets: currencyOpt.issuer, // jshint ignore:line
-          currency_gets: currencyOpt.currency // jshint ignore:line
+          issuer_pays   : bondOpt.issuer, // jshint ignore:line
+          currency_pays : bondOpt.currency, // jshint ignore:line
+          issuer_gets   : currencyOpt.issuer, // jshint ignore:line
+          currency_gets : currencyOpt.currency // jshint ignore:line
         } : {
-          issuer_pays: currencyOpt.issuer, // jshint ignore:line
-          currency_pays: currencyOpt.currency, // jshint ignore:line
-          issuer_gets: bondOpt.issuer, // jshint ignore:line
-          currency_gets: bondOpt.currency // jshint ignore:line
+          issuer_pays   : currencyOpt.issuer, // jshint ignore:line
+          currency_pays : currencyOpt.currency, // jshint ignore:line
+          issuer_gets   : bondOpt.issuer, // jshint ignore:line
+          currency_gets : bondOpt.currency // jshint ignore:line
         };
 
         getBookOffersByType(type);
@@ -89,11 +92,11 @@ angular.module('lendbitcoin')
 
       function getBookOffersByType(type) {
         var optBookOffers = type === 'bid' ? {
-          gets: currencyOpt,
-          pays: bondOpt
+          gets : currencyOpt,
+          pays : bondOpt
         } : {
-          gets: bondOpt,
-          pays: currencyOpt
+          gets : bondOpt,
+          pays : currencyOpt
         };
 
         remote.requestBookOffers(optBookOffers, getCbBookOffers(type));
@@ -109,9 +112,9 @@ angular.module('lendbitcoin')
             getPriceFromOffer(data.offers[0], type) : 0;
 
           var priceObj = type === 'bid' ? {
-            b: +(+newPrice).toFixed(4)
+            b : +(+newPrice).toFixed(4)
           } : {
-            a: +(+newPrice).toFixed(4)
+            a : +(+newPrice).toFixed(4)
           };
 
           cb(null, priceObj);
@@ -135,9 +138,9 @@ angular.module('lendbitcoin')
           })
           .map(function (line) {
             return {
-              i: line.account,
-              s: line.currency,
-              v: +(+line.balance).toFixed(3)
+              i : line.account,
+              s : line.currency,
+              v : +(+line.balance).toFixed(3)
             };
           }).value();
 
@@ -166,16 +169,16 @@ angular.module('lendbitcoin')
           /* jshint ignore:start */
 
           var isExchangeCurrency =
-            (_.contains(rippleBonds.currencies, offer.taker_gets.currency) &&
-              offer.taker_gets.issuer === FED) ||
-            (_.contains(rippleBonds.currencies, offer.taker_pays.currency) &&
-              offer.taker_pays.issuer === FED);
+                (_.contains(rippleBonds.currencies, offer.taker_gets.currency) &&
+                  offer.taker_gets.issuer === FED) ||
+                (_.contains(rippleBonds.currencies, offer.taker_pays.currency) &&
+                  offer.taker_pays.issuer === FED);
 
           var isBond =
-            (rippleBonds.isValidSymbol(offer.taker_gets.currency) &&
-              offer.taker_gets.issuer !== FED) ||
-            (rippleBonds.isValidSymbol(offer.taker_pays.currency) &&
-              offer.taker_pays.issuer !== FED);
+                (rippleBonds.isValidSymbol(offer.taker_gets.currency) &&
+                  offer.taker_gets.issuer !== FED) ||
+                (rippleBonds.isValidSymbol(offer.taker_pays.currency) &&
+                  offer.taker_pays.issuer !== FED);
 
           /* jshint ignore:end */
 

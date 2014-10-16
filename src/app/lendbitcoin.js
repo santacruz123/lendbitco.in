@@ -4,13 +4,13 @@ angular.module('lendbitcoin', ['ngCookies', 'ui.router', 'percentage', 'xeditabl
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
-        url: '/',
-        templateUrl: 'app/main/main.html',
-        controller: 'MainCtrl'
+        url         : '/',
+        templateUrl : 'app/main/main.html',
+        controller  : 'MainCtrl'
       }).state('address', {
-        url: '/{address:r[\\w]{33}}',
-        templateUrl: 'app/main/main.html',
-        controller: 'MainCtrl'
+        url         : '/{address:r[\\w]{33}}',
+        templateUrl : 'app/main/main.html',
+        controller  : 'MainCtrl'
       });
 
     $urlRouterProvider.otherwise('/');
