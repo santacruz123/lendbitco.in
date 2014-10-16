@@ -3,7 +3,7 @@
 describe('controllers', function(){
   var scope;
 
-  beforeEach(module('lendbitcoin'));
+  beforeEach(module('tmp'));
 
   beforeEach(inject(function($rootScope) {
   	scope = $rootScope.$new();

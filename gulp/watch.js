@@ -2,13 +2,9 @@
 
 var gulp = require('gulp');
 
-var browserSync = require('browser-sync');
-
-var $ = require('gulp-load-plugins')();
-
-gulp.task('watch', ['wiredep', 'styles'] ,function () {
-  gulp.watch('app/styles/**/*.scss', ['styles']);
-  gulp.watch('app/scripts/**/*.js', ['scripts']);
-  gulp.watch('app/images/**/*', ['images']);
+gulp.task('watch', ['styles'] ,function () {
+  gulp.watch('src/{app,components}/**/*.scss', ['styles']);
+  gulp.watch('src/{app,components}/**/*.js', ['scripts']);
+  gulp.watch('src/assets/images/**/*', ['images']);
   gulp.watch('bower.json', ['wiredep']);
 });
