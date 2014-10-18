@@ -1,9 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .controller('MainCtrl', function (
-    $scope, $filter, $stateParams, RB, Account, Platform, Orders, $rootScope, _
-    ) {
+  function MainCtrl($scope, $stateParams, RB, Account, _) {
 
     if (!_.isUndefined($stateParams.address)) {
       Account.acc = $stateParams.address;
@@ -13,20 +11,7 @@ angular.module('lendbitcoin')
 
     $scope.rb = RB;
 
-    var reloadCb = $scope.reloadCb = function () {
-      $scope.balances = Platform.getBalances();
-      $scope.bonds = Platform.getBonds();
-      $scope.positions = Platform.getPositions();
-      $scope.orders = Orders.getOrders();
-      $rootScope.$apply();
-    };
-
     // Init
-
-    Platform.reloadCb = reloadCb;
-
-    $scope.issuers = Platform.getIssuers();
-    Orders.updateOrders(reloadCb);
 
     $scope.setOrderTemplate = function (tmpl, bidask) {
       if (!_.isUndefined(tmpl.b)) { // Bond
@@ -43,8 +28,13 @@ angular.module('lendbitcoin')
 
     $scope.preset = {};
 
-    // $scope.predicate = 'b';
-    // $scope.reverse = false;
-    // $scope.filter = {};
+    $scope.predicate = 'b';
+    $scope.reverse = false;
+    $scope.filter = {};
 
-  });
+  }
+
+  angular
+    .module('lendbitcoin')
+    .controller('MainCtrl', MainCtrl);
+})();

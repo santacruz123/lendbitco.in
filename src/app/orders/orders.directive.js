@@ -1,16 +1,19 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('orders', function (Orders) {
+  .directive('orders', function (Platform, $rootScope) {
     return {
       templateUrl : 'app/orders/orders.directive.html',
       restrict    : 'E',
       controller  : function ($scope) {
-        $scope.cancelOrder = function (id) {
-          Orders.cancelOrder(id, function () {
-            Orders.updateOrders($scope.reloadCb);
-          });
-        };
+        $rootScope.$on('order:update', function () {
+          $scope.orders = Platform.getOrders();
+          $rootScope.$apply();
+        });
+
+        Platform.updateOrders();
+
+        $scope.cancelOrder = Platform.cancelOrder;
       }
     };
   });

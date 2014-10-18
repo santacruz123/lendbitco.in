@@ -15,7 +15,7 @@
     <tbody>
     <tr ng-repeat="bond in bonds track by bond.i + bond.s | filter:filter | orderBy:predicate:reverse">
         <td>
-            <bonds-fav bond="bond"></bonds-fav>
+            <bonds-favourite bond="bond"></bonds-favourite>
         </td>
         <td>{{bond.i}}</td>
         <td>{{bond.s}}</td>

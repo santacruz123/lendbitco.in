@@ -1,11 +1,10 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .service('Ripple', function ($window, FED, Account, _, RB) {
+  function Ripple($window, FED, Account, _, RB, $rootScope) {
 
     var _isSetSecret;
     var ripple = $window.window.ripple;
-    var rippleBonds = $window.window.rippleBonds;
     var Remote = ripple.Remote;
 
     var remote = new Remote({
@@ -40,7 +39,10 @@ angular.module('lendbitcoin')
       return _isSetSecret;
     };
 
-    this.watchBidAsk = function (issuer, symbol, cb) {
+    this.watchBidAsk = function (obj) {
+
+      var issuer = obj.i;
+      var symbol = obj.s;
 
       var bondOpt = {
         currency : symbol,
@@ -48,9 +50,11 @@ angular.module('lendbitcoin')
       };
 
       var currencyOpt = {
-        currency : rippleBonds.currencyCodes[symbol[0]],
+        currency : RB.currencyCodes[symbol[0]],
         issuer   : FED
       };
+
+      angular.forEach(['bid', 'ask'], getPricesInit);
 
       function getPriceFromOffer(offer, type) {
         if (type === 'bid') {
@@ -112,28 +116,32 @@ angular.module('lendbitcoin')
             getPriceFromOffer(data.offers[0], type) : 0;
 
           var priceObj = type === 'bid' ? {
+            i : issuer,
+            s : symbol,
             b : +(+newPrice).toFixed(4)
           } : {
+            i : issuer,
+            s : symbol,
             a : +(+newPrice).toFixed(4)
           };
 
-          cb(null, priceObj);
+          $rootScope.$broadcast('bond:price', priceObj);
         };
       }
-
-      angular.forEach(['bid', 'ask'], getPricesInit);
     };
 
+    this.getBalances = function () {
 
-    this.getBalances = function (cb) {
-      remote.request_account_lines(Account.acc, function (err, data) { // jshint ignore:line
+      /*jshint camelcase: false */
+      remote.request_account_lines(Account.acc, function (err, data) {
         if (err) {
-          return cb(err);
+          console.log('request_account_lines error - ', err);
+          return;
         }
 
         var symbols = _(data.lines)
           .filter(function (line) {
-            return RB.isValidSymbol(line.currency) ||
+            return RB.isSymbol(line.currency) ||
               _.indexOf(RB.currencies, line.currency) > -1;
           })
           .map(function (line) {
@@ -144,7 +152,7 @@ angular.module('lendbitcoin')
             };
           }).value();
 
-        cb(null, symbols);
+        $rootScope.$broadcast('balance:change', symbols);
       });
     };
 
@@ -154,35 +162,12 @@ angular.module('lendbitcoin')
 
     this.Amount = ripple.Amount;
 
-    this.updateOrders = function (cb) {
-
+    this.updateOrders = function () {
       remote.requestAccountOffers(Account.acc, function (err, data) {
 
         if (err) {
-          return cb(err);
-        }
-
-        function isRippleBondsOffer(offer) { // jshint ignore:line
-
-          // Detecting if rippleBonds symbols/currencies are there
-
-          /* jshint ignore:start */
-
-          var isExchangeCurrency =
-                (_.contains(rippleBonds.currencies, offer.taker_gets.currency) &&
-                  offer.taker_gets.issuer === FED) ||
-                (_.contains(rippleBonds.currencies, offer.taker_pays.currency) &&
-                  offer.taker_pays.issuer === FED);
-
-          var isBond =
-                (rippleBonds.isValidSymbol(offer.taker_gets.currency) &&
-                  offer.taker_gets.issuer !== FED) ||
-                (rippleBonds.isValidSymbol(offer.taker_pays.currency) &&
-                  offer.taker_pays.issuer !== FED);
-
-          /* jshint ignore:end */
-
-          return isExchangeCurrency && isBond; // jshint ignore:line
+          console.log('Ripple - updating orders failed', err);
+          return;
         }
 
         var orders = _(data.offers)
@@ -190,13 +175,14 @@ angular.module('lendbitcoin')
           .map(function (offer) {
             var order = {};
 
-            var g = offer.taker_gets; // jshint ignore:line
-            var p = offer.taker_pays; // jshint ignore:line
+            /*jshint camelcase: false */
+            var g = offer.taker_gets;
+            var p = offer.taker_pays;
 
             // true = buy, false = sell
 
             order.id = offer.seq;
-            order.t = _.contains(rippleBonds.currencies, g.currency);
+            order.t = RB.isCurrency(g.currency);
             order.i = order.t ? p.issuer : g.issuer;
             order.s = g.issuer !== FED ? g.currency : p.currency;
             order.p = order.t ? +g.value / +p.value : +p.value / +g.value;
@@ -207,8 +193,33 @@ angular.module('lendbitcoin')
             return order;
           }).value();
 
-        cb(null, orders);
-      });
-    };
+        console.log('Orders', orders);
 
-  });
+        $rootScope.$broadcast('order:change', orders);
+      });
+
+      function isRippleBondsOffer(offer) {
+
+        // Detecting if rippleBonds symbols/currencies are there
+
+        var gets, pays;
+
+        /* jshint camelcase: false */
+        gets = offer.taker_gets;
+        pays = offer.taker_pays;
+
+        return (
+          gets.issuer === FED &&
+          RB.isCurrency(gets.currency) && RB.isSymbol(pays.currency)
+          ) || (
+          pays.issuer === FED &&
+          RB.isCurrency(pays.currency) && RB.isSymbol(gets.currency)
+          );
+      }
+    };
+  }
+
+  angular
+    .module('lendbitcoin')
+    .service('Ripple', Ripple);
+})();

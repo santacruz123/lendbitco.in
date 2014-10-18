@@ -6,10 +6,10 @@ angular.module('lendbitcoin')
       templateUrl : 'app/account/account.balance.directive.html',
       restrict    : 'E',
       controller  : function ($scope) {
-        Platform.updateBalances(function () {
+        Platform.updateBalances();
+        $rootScope.$on('balance:update', function () {
           $scope.balances = Platform.getBalances();
-          $scope.$emit('balance:update', {});
-          $rootScope.$digest();
+          $rootScope.$apply();
         });
       }
     };
