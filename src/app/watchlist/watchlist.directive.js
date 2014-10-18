@@ -9,7 +9,6 @@
         $rootScope.$on('bond:update', function () {
           $scope.bonds = Platform.getBonds();
           $rootScope.$apply();
-          console.log($scope.bonds);
         });
       }
     };

@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .service('Account', function ($cookieStore, _) {
+  function Account($cookieStore, _) {
 
     // Account
     var acc = '';
@@ -79,5 +79,9 @@ angular.module('lendbitcoin')
         return favs.bonds;
       }
     };
+  }
 
-  });
+  angular
+    .module('lendbitcoin')
+    .service('Account', Account);
+})();

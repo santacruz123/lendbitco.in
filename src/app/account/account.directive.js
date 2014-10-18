@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('account', function (Account, Ripple) {
+  .directive('account', function (Account, Ripple, $rootScope) {
     return {
       templateUrl : 'app/account/account.directive.html',
       restrict    : 'E',
@@ -11,6 +11,7 @@ angular.module('lendbitcoin')
           if (n) {
             Account.acc = n;
             $scope.isSecretSet = false;
+            $rootScope.$broadcast('account:change');
           }
         });
 
