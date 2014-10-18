@@ -6,17 +6,12 @@ angular.module('lendbitcoin')
       templateUrl : 'app/orders/orders.directive.html',
       restrict    : 'E',
       controller  : function ($scope) {
-
         $rootScope.$on('order:update', function () {
-          $scope.bonds = Platform.getOrders();
+          $scope.orders = Platform.getOrders();
           $rootScope.$apply();
         });
 
-
         Platform.updateOrders();
-
-
-
 
         $scope.cancelOrder = Platform.cancelOrder;
       }

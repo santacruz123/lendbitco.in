@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('lendbitcoin')
-  .directive('buysell', function (Platform, Orders) {
+  .directive('buysell', function (Platform, $rootScope) {
     return {
       templateUrl : 'app/platform/platform.buysell.directive.html',
       restrict    : 'E',
@@ -12,6 +12,10 @@ angular.module('lendbitcoin')
           $scope.order.t = String($scope.order.t);
         }, true);
 
+        $rootScope.$on('bond:new', function () {
+          $scope.issuers = Platform.getIssuers();
+        });
+
         $scope.makeOrder = function (order) {
           var opt = {
             i : order.i,
@@ -21,8 +25,10 @@ angular.module('lendbitcoin')
             p : +order.p
           };
 
-          Orders.makeOrder(opt, function () {
-            Orders.updateOrders($scope.reloadCb);
+          Platform.makeOrder(opt, function (err) {
+            if (err) {
+              console.log('Platform.makeOrder - fail', err);
+            }
           });
         };
       }

@@ -3,10 +3,12 @@
 
   function Platform(FED, Account, Ripple, _, RB, $rootScope) {
 
+    var self = this;
     var arr = [];
     var orders = [];
 
     $rootScope.$on('bond:price', processPrice);
+    $rootScope.$on('order:change', processOrders);
     $rootScope.$on('balance:change', processBalance);
     $rootScope.$on('account:change', function () {
       Ripple.getBalances();
@@ -20,6 +22,11 @@
     angular.forEach(Account.getFavBonds(), updateSymbol);
 
     // Definitions
+
+    function processOrders(event, newOrders) {
+      orders = newOrders;
+      $rootScope.$broadcast('order:update');
+    }
 
     function processPrice(event, obj) {
       updateSymbol(obj);
@@ -103,8 +110,8 @@
 
     // Orders
 
-    this.getOrders = function (opt) {
-      return _(orders).filter(opt).value();
+    this.getOrders = function () {
+      return orders;
     };
 
     this.makeOrder = function (opt, cb) {
@@ -119,8 +126,9 @@
       var cHuman = (opt.v * opt.p).toFixed(4) + curr;
       var sHuman = (opt.v).toFixed(4) + opt.s;
 
-      var cAmt = Ripple.Amount.from_human(cHuman).set_issuer(FED); // jshint ignore:line
-      var sAmt = Ripple.Amount.from_human(sHuman).set_issuer(opt.i); // jshint ignore:line
+      /* jshint camelcase:false */
+      var cAmt = Ripple.Amount.from_human(cHuman).set_issuer(FED);
+      var sAmt = Ripple.Amount.from_human(sHuman).set_issuer(opt.i);
 
       var tObj = opt.t ? {
         from       : Account.acc,
@@ -148,11 +156,15 @@
           return cb(err);
         }
 
-        if (res.engine_result !== 'tesSUCCESS') { // jshint ignore:line
+        /* jshint camelcase:false */
+        if (res.engine_result !== 'tesSUCCESS') {
           return cb(res);
         }
 
-        cb(err, res.tx_json.Sequence); // jshint ignore:line
+        /* jshint camelcase:false */
+        cb(err, res.tx_json.Sequence);
+
+        self.updateOrders();
       });
     };
 

@@ -193,10 +193,10 @@
             return order;
           }).value();
 
-        $rootScope.$broadcast('order:update', orders);
+        $rootScope.$broadcast('order:change', orders);
       });
 
-      function isRippleBondsOffer(offer) { // jshint ignore:line
+      function isRippleBondsOffer(offer) {
 
         // Detecting if rippleBonds symbols/currencies are there
 
@@ -206,15 +206,14 @@
         gets = offer.taker_gets;
         pays = offer.taker_pays;
 
-        var isFED = (RB.isCurrency(gets.currency) && gets.issuer === FED) ||
-          (RB.isCurrency(pays.currency) && pays.issuer === FED);
-
-        var isBond = (RB.isSymbol(gets.currency) && gets.issuer !== FED) ||
-          (RB.isSymbol(pays.currency) && pays.issuer !== FED);
-
-        return isFED && isBond;
+        return (
+          gets.issuer === FED &&
+          RB.isCurrency(gets.currency) && RB.isSymbol(pays.currency)
+          ) || (
+          pays.issuer === FED &&
+          RB.isCurrency(pays.currency) && RB.isSymbol(gets.currency)
+          );
       }
-
     };
   }
 
