@@ -77,6 +77,8 @@
       }
     }
 
+    this.addSymbol = updateSymbol;
+
     this.getIssuers = function () {
       return _(arr)
         .map('i')

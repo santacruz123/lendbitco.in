@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .directive('bondFav', function (Account, _) {
+  function bondsFavourite(Account, _) {
     return {
       template   : '<a ng-click="toggleFav()">{{isFav}}</a>',
       restrict   : 'E',
@@ -23,4 +23,9 @@ angular.module('lendbitcoin')
         };
       }
     };
-  });
+  }
+
+  angular
+    .module('lendbitcoin')
+    .directive('bondsFavourite', bondsFavourite);
+})();
