@@ -193,6 +193,8 @@
             return order;
           }).value();
 
+        console.log('Orders', orders);
+
         $rootScope.$broadcast('order:change', orders);
       });
 

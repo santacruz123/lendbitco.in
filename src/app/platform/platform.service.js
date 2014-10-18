@@ -11,6 +11,7 @@
     $rootScope.$on('order:change', processOrders);
     $rootScope.$on('balance:change', processBalance);
     $rootScope.$on('account:change', function () {
+      arr = [];
       Ripple.getBalances();
       Ripple.updateOrders();
     });
