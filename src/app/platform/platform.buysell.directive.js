@@ -3,7 +3,7 @@
 
   function buysell(Platform, $rootScope) {
     return {
-      templateUrl : 'app/platform/platform.buysell.directive.html',
+      templateUrl : 'app/platform/platform.buysell.directive.tpl.html',
       restrict    : 'E',
       scope       : false,
       controller  : function ($scope) {

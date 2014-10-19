@@ -3,7 +3,7 @@
 
   function positions(Platform, $rootScope) {
     return {
-      templateUrl : 'app/positions/positions.directive.html',
+      templateUrl : 'app/positions/positions.directive.tpl.html',
       restrict    : 'E',
       controller  : function ($scope) {
         $rootScope.$on('balance:update', function () {

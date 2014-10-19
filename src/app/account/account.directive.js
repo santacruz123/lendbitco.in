@@ -3,7 +3,7 @@
 
   function account(Account, Ripple, $rootScope) {
     return {
-      templateUrl : 'app/account/account.directive.html',
+      templateUrl : 'app/account/account.directive.tpl.html',
       restrict    : 'E',
       scope       : {},
       controller  : function ($scope) {

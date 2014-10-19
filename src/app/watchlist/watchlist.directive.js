@@ -3,7 +3,7 @@
 
   function watchList(Platform, $rootScope) {
     return {
-      templateUrl : 'app/watchlist/watchlist.directive.html',
+      templateUrl : 'app/watchlist/watchlist.directive.tpl.html',
       restrict    : 'E',
       controller  : function ($scope) {
         $rootScope.$on('bond:update', updateBonds);

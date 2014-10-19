@@ -3,7 +3,7 @@
 angular.module('lendbitcoin')
   .directive('orders', function (Platform, $rootScope) {
     return {
-      templateUrl : 'app/orders/orders.directive.html',
+      templateUrl : 'app/orders/orders.directive.tpl.html',
       restrict    : 'E',
       controller  : function ($scope) {
         $rootScope.$on('order:update', function () {

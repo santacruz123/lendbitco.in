@@ -3,7 +3,7 @@
 
   function platformSymbolAdd(Platform) {
     return {
-      templateUrl : 'app/platform/platform.symbol.add.directive.html',
+      templateUrl : 'app/platform/platform.symbol.add.directive.tpl.html',
       restrict    : 'E',
       scope       : false,
       controller  : function ($scope) {

@@ -3,7 +3,7 @@
 
   function accountBalance(Platform, $rootScope) {
     return {
-      templateUrl : 'app/account/account.balance.directive.html',
+      templateUrl : 'app/account/account.balance.directive.tpl.html',
       restrict    : 'E',
       controller  : function ($scope) {
         Platform.updateBalances();
