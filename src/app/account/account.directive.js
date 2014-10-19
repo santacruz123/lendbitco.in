@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .directive('account', function (Account, Ripple, $rootScope) {
+  function account(Account, Ripple, $rootScope) {
     return {
       templateUrl : 'app/account/account.directive.html',
       restrict    : 'E',
@@ -26,4 +26,10 @@ angular.module('lendbitcoin')
         };
       }
     };
-  });
+  }
+
+  angular
+    .module('lendbitcoin')
+    .directive('account', account);
+
+})();

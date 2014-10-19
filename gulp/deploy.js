@@ -8,7 +8,7 @@ gulp.task('deploy', ['build'], function () {
   gulp
     .src('./dist/**/*')
     .pipe($.ghPages({
-      cacheDir: '.tmp/ghPages',
-      cname: 'lendbitco.in'
+      cacheDir : '.tmp/ghPages',
+      cname    : 'lendbitco.in'
     }));
 });

@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .directive('buysell', function (Platform, $rootScope) {
+  function buysell(Platform, $rootScope) {
     return {
       templateUrl : 'app/platform/platform.buysell.directive.html',
       restrict    : 'E',
@@ -33,4 +33,9 @@ angular.module('lendbitcoin')
         };
       }
     };
-  });
+  }
+
+  angular
+    .module('lendbitcoin')
+    .directive('buysell', buysell);
+})();

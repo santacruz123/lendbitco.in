@@ -1,7 +1,7 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('lendbitcoin')
-  .directive('accountBalance', function (Platform, $rootScope) {
+  function accountBalance(Platform, $rootScope) {
     return {
       templateUrl : 'app/account/account.balance.directive.html',
       restrict    : 'E',
@@ -13,4 +13,9 @@ angular.module('lendbitcoin')
         });
       }
     };
-  });
+  }
+
+  angular
+    .module('lendbitcoin')
+    .directive('accountBalance', accountBalance);
+})();

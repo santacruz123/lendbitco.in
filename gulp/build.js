@@ -3,7 +3,7 @@
 var gulp = require('gulp');
 
 var $ = require('gulp-load-plugins')({
-  pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
+  pattern : ['gulp-*', 'main-bower-files', 'uglify-save-license', 'del']
 });
 
 function handleError(err) {
@@ -11,9 +11,9 @@ function handleError(err) {
   this.emit('end');
 }
 
-gulp.task('styles', ['wiredep'],  function () {
+gulp.task('styles', ['wiredep'], function () {
   return gulp.src('src/{app,components}/**/*.scss')
-    .pipe($.sass({style: 'expanded'}))
+    .pipe($.sass({style : 'expanded'}))
     .on('error', handleError)
     .pipe($.autoprefixer('last 1 version'))
     .pipe(gulp.dest('.tmp'))
@@ -30,12 +30,12 @@ gulp.task('scripts', function () {
 gulp.task('partials', function () {
   return gulp.src('src/{app,components}/**/*.html')
     .pipe($.minifyHtml({
-      empty: true,
-      spare: true,
-      quotes: true
+      empty  : true,
+      spare  : true,
+      quotes : true
     }))
     .pipe($.ngHtml2js({
-      moduleName: 'tmp'
+      moduleName : 'lendbitcoin'
     }))
     .pipe(gulp.dest('.tmp'))
     .pipe($.size());
@@ -49,19 +49,19 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
 
   return gulp.src('src/*.html')
     .pipe($.inject(gulp.src('.tmp/{app,components}/**/*.js'), {
-      read: false,
-      starttag: '<!-- inject:partials -->',
-      addRootSlash: false,
-      addPrefix: '../'
+      read         : false,
+      starttag     : '<!-- inject:partials -->',
+      addRootSlash : false,
+      addPrefix    : '../'
     }))
     .pipe(assets = $.useref.assets())
     .pipe($.rev())
     .pipe(jsFilter)
     .pipe($.ngAnnotate())
-    .pipe($.uglify({preserveComments: $.uglifySaveLicense}))
+    .pipe($.uglify({preserveComments : $.uglifySaveLicense}))
     .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    .pipe($.replace('bower_components/bootstrap-sass-official/assets/fonts/bootstrap','fonts'))
+    .pipe($.replace('bower_components/bootstrap-sass-official/assets/fonts/bootstrap', 'fonts'))
     .pipe($.csso())
     .pipe(cssFilter.restore())
     .pipe(assets.restore())
@@ -69,9 +69,9 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
     .pipe($.revReplace())
     .pipe(htmlFilter)
     .pipe($.minifyHtml({
-      empty: true,
-      spare: true,
-      quotes: true
+      empty  : true,
+      spare  : true,
+      quotes : true
     }))
     .pipe(htmlFilter.restore())
     .pipe(gulp.dest('dist'))
@@ -81,9 +81,9 @@ gulp.task('html', ['styles', 'scripts', 'partials'], function () {
 gulp.task('images', function () {
   return gulp.src('src/assets/images/**/*')
     .pipe($.cache($.imagemin({
-      optimizationLevel: 3,
-      progressive: true,
-      interlaced: true
+      optimizationLevel : 3,
+      progressive       : true,
+      interlaced        : true
     })))
     .pipe(gulp.dest('dist/assets/images'))
     .pipe($.size());
