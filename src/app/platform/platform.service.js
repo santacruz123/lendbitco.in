@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function Platform(FED, Account, Ripple, _, RB, $rootScope) {
+  function Platform(FED, Account, Ripple, _, RB, $rootScope, $q) {
 
     var self = this;
     var arr = [];
@@ -121,10 +121,13 @@
       return orders;
     };
 
-    this.makeOrder = function (order, cb) {
+    this.makeOrder = function (order) {
+
+      var deferred = $q.defer();
 
       if (!Ripple.isSecretSet()) {
-        return cb ? cb(new Error('Set secret')) : console.error('Set secret');
+        console.error('Set secret');
+        return $q.reject(new Error('Set secret'));
       }
 
       var tran = Ripple.transaction(),
@@ -150,98 +153,59 @@
 
       tran.submit(function (err, res) {
         if (err) {
-          return cb ? cb(err) : console.log('makeOrder - fail', err);
+          return deferred.reject(err);
         }
 
         /* jshint camelcase:false */
         if (res.engine_result !== 'tesSUCCESS') {
-          return cb ? cb(res) : console.log('makeOrder - fail', res);
+          return deferred.reject(res);
         }
 
         self.updateOrders();
-
-        return cb ? cb(null, res.tx_json.Sequence) :
-          console.log('makeOrder', res.tx_json.Sequence);
+        console.log('makeOrder', res.tx_json.Sequence);
+        return deferred.resolve(res.tx_json.Sequence);
       });
+
+      return deferred.promise;
     };
 
-    this.cancelAllOrders = function (issuer, symbol, type, cb) {
-      var args = [];
-
-      for (var i = 0; i < arguments.length; i++) {
-        args.push(arguments[i]);
-      }
-
-      if (_.isFunc(args[args.length - 1])) {
-        cb = args.pop();
-      }
-
-      issuer = args.length !== 0 ? args.shift() : null;
-      symbol = args.length !== 0 ? args.shift() : null;
-      type = args.length !== 0 ? args.shift() : null;
-
-      // Arguments - done
-
-      var opt = {};
-
-      if (_.isObject(issuer)) {
-        opt = issuer;
-      } else {
-        if (issuer) {
-          opt.i = issuer;
-        }
-
-        if (symbol) {
-          opt.s = symbol;
-        }
-
-        if (!_.isUndefined(type)) {
-          opt.t = type;
-        }
-      }
-
-//      var orders = this.getOrders();
-//      async(
-//        _(orders)
-//        .map(function (order) {
-//          return _.bind(self.cancelOrder, self, order.id);
-//        }).value(),
-//        function (err, data) {
-//          console.log(err, data);
-//          console.log('All orders deleted');
-//
-//          if (cb) {
-//            cb();
-//          }
-//        });
+    this.cancelOrders = function (opt) {
+      return $q.all(_(orders).filter(opt).pluck('id').value().map(self.cancelOrder));
     };
 
-    this.cancelOrder = function (id, cb) {
+    this.cancelOrder = function (id) {
+
+      if (!id){
+        return $q.reject(new Error('cancelOrder - missing order id'));
+      }
+
+      console.log('Cancelling order', id);
+
+      var deferred = $q.defer();
 
       if (!Ripple.isSecretSet()) {
-        return cb ? cb(new Error('Set secret')) : console.error('Set secret');
+        console.error('Set secret');
+        return $q.reject(new Error('Set secret'));
       }
 
       var tran = Ripple.transaction().offerCancel(Account.acc, id);
 
       tran.submit(function (err, res) {
         if (err) {
-          return cb ? cb(err) : console.log('cancelOrder - fail', err);
+          return deferred.reject(err);
         }
 
         /* jshint camelcase:false */
         if (res.engine_result !== 'tesSUCCESS') {
-          return cb ? cb(res) : console.log('cancelOrder - fail', res);
+          return deferred.reject(res);
         }
 
         removeOrder(id);
-
         console.log('cancelOrder', id);
-
-        if (cb) {
-          return cb(null, id);
-        }
+        return deferred.resolve(id);
       });
+
+      return deferred.promise;
     };
   }
 

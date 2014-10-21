@@ -13,7 +13,16 @@ angular.module('lendbitcoin')
 
         Platform.updateOrders();
 
-        $scope.cancelOrder = Platform.cancelOrder;
+        $scope.cancelOrder = function (orderId) {
+          Platform.cancelOrder(orderId).then(
+            function (res) {
+              console.log('Success', res);
+            },
+            function (err) {
+              console.log('Error', err);
+            }
+          );
+        };
       }
     };
   });

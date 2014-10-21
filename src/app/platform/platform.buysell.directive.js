@@ -25,11 +25,14 @@
             p : +$scope.order.p
           };
 
-          Platform.makeOrder(opt, function (err) {
-            if (err) {
-              console.log('Platform.makeOrder - fail', err);
+          Platform.makeOrder(opt).then(
+            function (res) {
+              console.log('Success', res);
+            },
+            function (err) {
+              console.log('Error', err);
             }
-          });
+          );
         };
       }
     };
