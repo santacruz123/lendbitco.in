@@ -77,6 +77,10 @@
       }
     }
 
+    function removeOrder(id) {
+      processOrders(null, _.reject(orders, {id : id}));
+    }
+
     this.addSymbol = updateSymbol;
 
     this.getIssuers = function () {
@@ -225,27 +229,26 @@
     this.cancelOrder = function (id, cb) {
 
       if (!Ripple.isSecretSet()) {
-        return cb('Secret not set');
+
+        if (cb) {
+          return cb('Set secret');
+        }
+
+        return console.error('Set secret');
       }
 
       var tran = Ripple.transaction();
       tran.offerCancel(Account.acc, id);
 
       tran.submit(function (err, res) {
-
-        if (!cb) {
-          return console.log(err, res);
+        /*jshint camelcase:false */
+        if (res.engine_result === 'tesSUCCESS') {
+          removeOrder(id);
+        } else {
+          err = res;
         }
 
-        if (err) {
-          return cb(err);
-        }
-
-        if (res.engine_result !== 'tesSUCCESS') { // jshint ignore:line
-          return cb(res);
-        }
-
-        cb(null);
+        return cb ? (err ? cb(err) : cb(null)) : null;
       });
     };
   }
