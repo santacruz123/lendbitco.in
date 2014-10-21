@@ -16,13 +16,13 @@
           $scope.issuers = Platform.getIssuers();
         });
 
-        $scope.makeOrder = function (order) {
+        $scope.makeOrder = function () {
           var opt = {
-            i : order.i,
-            s : order.s,
-            t : Boolean(order.t),
-            v : +order.v,
-            p : +order.p
+            i : $scope.order.i,
+            s : $scope.order.s,
+            t : Boolean(+$scope.order.t),
+            v : +$scope.order.v,
+            p : +$scope.order.p
           };
 
           Platform.makeOrder(opt, function (err) {

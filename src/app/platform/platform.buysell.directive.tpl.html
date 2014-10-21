@@ -1,9 +1,9 @@
 <div>
   <select ng-model="order.i" ng-options="i as i for i in issuers"></select><br/>
   Symbol: <input type="text" ng-model='order.s'><br/>
-  Type: BUY <input type="radio" ng-model="order.t" value="true">
-  SELL <input type="radio" ng-model="order.t" value="false"><br/>
+  Type: BUY <input type="radio" ng-model="order.t" value="1">
+  SELL <input type="radio" ng-model="order.t" value="0"><br/>
   Size: <input type="text" ng-model='order.v'><br>
   Price: <input type="text" ng-model='order.p'><br>
-  <button ng-click="makeOrder(order)">Send order</button>
+  <button ng-click="makeOrder()">Send order</button>
 </div>
