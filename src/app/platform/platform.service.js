@@ -121,57 +121,47 @@
       return orders;
     };
 
-    this.makeOrder = function (opt, cb) {
+    this.makeOrder = function (order, cb) {
 
       if (!Ripple.isSecretSet()) {
-        return cb('Secret not set');
+        return cb ? cb(new Error('Set secret')) : console.error('Set secret');
       }
 
-      var tran = Ripple.transaction();
-      var curr = RB.currencyCodes[opt.s[0]];
+      var tran = Ripple.transaction(),
+          curr = RB.currencyCodes[order.s[0]],
+          amtCurrency = (order.v * order.p).toFixed(4) + '/' + curr + '/' + FED,
+          amtSymbol = (order.v).toFixed(4) + '/' + order.s + '/' + order.i;
 
-      var cHuman = (opt.v * opt.p).toFixed(4) + curr;
-      var sHuman = (opt.v).toFixed(4) + opt.s;
-
-      /* jshint camelcase:false */
-      var cAmt = Ripple.Amount.from_human(cHuman).set_issuer(FED);
-      var sAmt = Ripple.Amount.from_human(sHuman).set_issuer(opt.i);
-
-      var tObj = opt.t ? {
+      var tObj = order.t ? {
         from       : Account.acc,
-        expiration : opt.e,
-        flag       : opt.f,
-        buy        : sAmt,
-        sell       : cAmt
+        expiration : order.e,
+        flag       : order.f,
+        buy        : amtSymbol,
+        sell       : amtCurrency
       } : {
         from       : Account.acc,
-        expiration : opt.e,
-        flag       : opt.f,
-        buy        : cAmt,
-        sell       : sAmt
+        expiration : order.e,
+        flag       : order.f,
+        buy        : amtCurrency,
+        sell       : amtSymbol
       };
 
       tran.offerCreate(tObj);
 
       tran.submit(function (err, res) {
-
-        if (!cb) {
-          return console.log(err, res);
-        }
-
         if (err) {
-          return cb(err);
+          return cb ? cb(err) : console.log('makeOrder - fail', err);
         }
 
         /* jshint camelcase:false */
         if (res.engine_result !== 'tesSUCCESS') {
-          return cb(res);
+          return cb ? cb(res) : console.log('makeOrder - fail', res);
         }
 
-        /* jshint camelcase:false */
-        cb(err, res.tx_json.Sequence);
-
         self.updateOrders();
+
+        return cb ? cb(null, res.tx_json.Sequence) :
+          console.log('makeOrder', res.tx_json.Sequence);
       });
     };
 
@@ -229,26 +219,28 @@
     this.cancelOrder = function (id, cb) {
 
       if (!Ripple.isSecretSet()) {
-
-        if (cb) {
-          return cb('Set secret');
-        }
-
-        return console.error('Set secret');
+        return cb ? cb(new Error('Set secret')) : console.error('Set secret');
       }
 
-      var tran = Ripple.transaction();
-      tran.offerCancel(Account.acc, id);
+      var tran = Ripple.transaction().offerCancel(Account.acc, id);
 
       tran.submit(function (err, res) {
-        /*jshint camelcase:false */
-        if (res.engine_result === 'tesSUCCESS') {
-          removeOrder(id);
-        } else {
-          err = res;
+        if (err) {
+          return cb ? cb(err) : console.log('cancelOrder - fail', err);
         }
 
-        return cb ? (err ? cb(err) : cb(null)) : null;
+        /* jshint camelcase:false */
+        if (res.engine_result !== 'tesSUCCESS') {
+          return cb ? cb(res) : console.log('cancelOrder - fail', res);
+        }
+
+        removeOrder(id);
+
+        console.log('cancelOrder', id);
+
+        if (cb) {
+          return cb(null, id);
+        }
       });
     };
   }

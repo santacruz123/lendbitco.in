@@ -184,7 +184,7 @@
             order.id = offer.seq;
             order.t = RB.isCurrency(g.currency);
             order.i = order.t ? p.issuer : g.issuer;
-            order.s = g.issuer !== FED ? g.currency : p.currency;
+            order.s = order.t ? p.currency : g.currency;
             order.p = order.t ? +g.value / +p.value : +p.value / +g.value;
             order.p = +(order.p).toFixed(4);
             order.v = order.t ? +p.value : +g.value;
