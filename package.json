@@ -37,7 +37,11 @@
     "protractor"               : "^1.1.1",
     "gulp-gh-pages"            : "^0.4.0",
     "uglify-save-license"      : "^0.4.1",
-    "gulp-sass"                : "^0.7.3"
+    "gulp-sass"                : "^0.7.3",
+    "gulp-coffee"              : "^2.2.0",
+    "gulp-coffeelint"          : "^0.4.0",
+    "gulp-plumber"             : "^0.6.6",
+    "gulp-sourcemaps"          : "^1.2.8"
   },
   "engines"         : {
     "node" : ">=0.10.0"

@@ -20,6 +20,10 @@ function browserSyncInit(baseDir, files, browser) {
 
 }
 
+gulp.task('bs-reload', function () {
+  browserSync.reload();
+});
+
 gulp.task('serve', ['watch'], function () {
   browserSyncInit([
     'src',
@@ -29,7 +33,8 @@ gulp.task('serve', ['watch'], function () {
     'src/assets/images/**/*',
     'src/*.html',
     'src/{app,components}/**/*.html',
-    'src/{app,components}/**/*.js'
+    'src/{app,components}/**/*.js',
+    '.tmp/{app,components}/**/*.js'
   ]);
 });
 
