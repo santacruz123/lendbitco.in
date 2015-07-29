@@ -8,7 +8,10 @@
     "test": "NODE_ENV=test"
   },
   "author": "Andrew Vorobyov <vorandrew@gmail.com>",
-  "repository": "git@github.com:santacruz123/lendbitco.in.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:santacruz123/lendbitco.in.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "coffee-loader": "^0.7.2",
